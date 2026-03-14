@@ -6,9 +6,31 @@ import { setMobileMenuOpen, toggleMobileMenu } from "@/store/uiSlice";
 
 
 
+import { useState, useEffect } from "react";
+
 export function Navbar() {
     const dispatch = useAppDispatch();
     const isMobileMenuOpen = useAppSelector((state) => state.ui.isMobileMenuOpen);
+    const [hidden, setHidden] = useState(false);
+    const [lastScrollY, setLastScrollY] = useState(0);
+
+    // Smart Scroll: Hide navbar on scroll down, show on scroll up
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            
+            // Only hide after 100px of scrolling
+            if (currentScrollY > 100 && currentScrollY > lastScrollY) {
+                setHidden(true);
+            } else {
+                setHidden(false);
+            }
+            setLastScrollY(currentScrollY);
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [lastScrollY]);
 
     const navLinks = [
         { name: "About", href: "#about" },
@@ -22,9 +44,13 @@ export function Navbar() {
     return (
         <>
             <motion.header
-                initial={{ y: -100, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.5 }}
+                variants={{
+                    visible: { y: 0, opacity: 1 },
+                    hidden: { y: -120, opacity: 0 },
+                }}
+                animate={hidden ? "hidden" : "visible"}
+                initial="visible"
+                transition={{ duration: 0.35, ease: "easeInOut" }}
                 className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center pointer-events-none pt-6 px-4"
             >
                 <div className="flex items-center gap-3 w-full max-w-6xl mx-auto justify-between md:justify-center pointer-events-auto">

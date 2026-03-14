@@ -89,7 +89,7 @@ export function Contact() {
                         {/* Connection Stats / Info */}
                         <div className="grid grid-cols-2 gap-4 mt-auto">
                             <a
-                                href="https://mail.google.com/mail/?view=cm&fs=1&to=contact.anil3124@gmail.com"
+                                href="https://mail.google.com/mail/?view=cm&fs=1&to=anilgowda3103@gmail.com"
                                 target="_blank"
                                 rel="noreferrer"
                                 className="p-4 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group/item"
@@ -98,7 +98,7 @@ export function Contact() {
                                     <Icons.mail className="w-6 h-6 group-hover/item:scale-110 transition-transform" />
                                 </div>
                                 <div className="text-xs text-zinc-500 font-mono mb-1">EMAIL_LINK</div>
-                                <div className="text-sm font-semibold text-zinc-200 truncate">contact.anil3124@...</div>
+                                <div className="text-sm font-semibold text-zinc-200 truncate">anilgowda3103@...</div>
                             </a>
 
                             <a

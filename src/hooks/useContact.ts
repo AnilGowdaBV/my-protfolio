@@ -12,7 +12,7 @@ interface ContactFormData {
 }
 
 const submitContactForm = async (data: ContactFormData) => {
-    const response = await fetch("https://formsubmit.co/ajax/contact.anil3124@gmail.com", {
+    const response = await fetch("https://formsubmit.co/ajax/anilgowda3103@gmail.com", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
