@@ -2,6 +2,24 @@
 export const projects = [
 
     {
+        id: "trusthire",
+        title: "TrustHire",
+        description:
+            "A full-stack freelance marketplace that fights fraud with escrow-backed payments, verified live work demos, and milestone releases—built for trust between clients and freelancers in the Indian market.",
+        details:
+            "TrustHire is a full-stack freelance marketplace platform designed to eliminate fraud and build trust between clients and freelancers through a secure escrow-based system. It acts as a trusted middleman: freelancers showcase verified skills using live work demo videos, and clients hire safely with milestone-based payments held in escrow and released only upon approval. The platform delivers transparency through real-time chat, structured dispute resolution, and admin verification. Built with React, NestJS, MySQL, Keycloak, Kafka, and Razorpay, it is engineered as a scalable, secure, and production-ready system tailored for the Indian market.",
+        features: [
+            "Escrow & milestones: Client funds held securely and released in stages only after approved deliverables.",
+            "Trust & verification: Live work demo videos and admin-backed checks so skills and identity carry weight.",
+            "Real-time collaboration: Chat and notifications that keep clients and freelancers aligned end to end.",
+            "Disputes & governance: A fair resolution path plus platform oversight to reduce abuse and chargeback-style risk.",
+            "Production-grade stack: React and NestJS with MySQL, Keycloak, Kafka, and Razorpay for auth, events, and payments.",
+        ],
+        tech: ["React", "NestJS", "MySQL", "Keycloak", "Apache Kafka", "Razorpay"],
+        link: "https://www.linkedin.com/in/anil-bv-2704a8351",
+        github: "https://www.google.com",
+    },
+    {
         id: "usb-monitoring",
         title: "Real-Time USB Monitoring System",
         description: "A digital sentinel for endpoint security, preventing data breaches and unauthorized access by vigorously monitoring physical ports.",

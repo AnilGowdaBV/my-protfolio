@@ -10,7 +10,7 @@ import { Contact } from "@/components/Contact";
 
 export function Home() {
     return (
-        <main className="flex flex-col items-center w-full pt-14">
+        <main className="flex flex-col items-stretch w-full max-w-full pt-14">
             <Hero />
             <About />
             <Skills />

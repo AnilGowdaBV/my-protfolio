@@ -152,7 +152,7 @@ export function Hero() {
 
                         <div className="flex gap-3 lg:gap-4 justify-center lg:justify-start pt-1 lg:pt-2">
                             <Button asChild className="h-10 lg:h-11 px-6 lg:px-8 rounded-full bg-white text-black hover:bg-zinc-200 text-sm lg:text-base font-semibold shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-all duration-300 hover:scale-[1.03] active:scale-95">
-                                <a href="/resume.pdf" download="Anil_BV_Resume.pdf">
+                                <a href="/Anil_BV.pdf" download="Anil_BV.pdf">
                                     Download Resume
                                     <Icons.download className="ml-2 w-3.5 h-3.5 lg:w-4 lg:h-4" />
                                 </a>

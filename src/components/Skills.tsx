@@ -1,275 +1,441 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
 import { skills } from "@/data/skills";
-import { Icons } from "@/components/Icons";
 
-// Category colour identity — violet/indigo spectrum to match portfolio
+const W = 1200;
+const H = 520;
+/* Tight side inset so the curve uses almost the full chart width */
+const PAD_X = 8;
+const AMP = 132;
+const MID = H / 2;
+
 const PALETTES = [
-    { accent: "#8b5cf6", from: "from-violet-500", to: "to-purple-600", glow: "rgba(139,92,246,0.15)" },
-    { accent: "#6366f1", from: "from-indigo-500", to: "to-blue-600", glow: "rgba(99,102,241,0.15)" },
-    { accent: "#a855f7", from: "from-purple-500", to: "to-fuchsia-600", glow: "rgba(168,85,247,0.15)" },
-    { accent: "#8b5cf6", from: "from-violet-500", to: "to-indigo-600", glow: "rgba(139,92,246,0.15)" },
-    { accent: "#7c3aed", from: "from-violet-600", to: "to-purple-700", glow: "rgba(124,58,237,0.15)" },
-    { accent: "#4f46e5", from: "from-indigo-600", to: "to-violet-700", glow: "rgba(79,70,229,0.15)" },
-    { accent: "#9333ea", from: "from-purple-600", to: "to-violet-600", glow: "rgba(147,51,234,0.15)" },
+    { accent: "#a78bfa", glow: "rgba(167,139,250,0.45)" },
+    { accent: "#818cf8", glow: "rgba(129,140,232,0.45)" },
+    { accent: "#c084fc", glow: "rgba(192,132,252,0.45)" },
+    { accent: "#a78bfa", glow: "rgba(167,139,250,0.45)" },
+    { accent: "#8b5cf6", glow: "rgba(139,92,246,0.5)" },
+    { accent: "#6366f1", glow: "rgba(99,102,241,0.45)" },
+    { accent: "#a855f7", glow: "rgba(168,85,247,0.45)" },
 ];
 
-const SLIDE = {
-    enter: (dir: number) => ({ x: dir > 0 ? "35%" : "-35%", opacity: 0, scale: 0.96 }),
-    center: { x: 0, opacity: 1, scale: 1 },
-    exit: (dir: number) => ({ x: dir > 0 ? "-35%" : "35%", opacity: 0, scale: 0.96 }),
-};
+function buildWavePath(n: number): string {
+    const left = PAD_X;
+    const right = W - PAD_X;
+    const steps = 360;
+    let d = "";
+    for (let s = 0; s <= steps; s++) {
+        const u = s / steps;
+        const x = left + u * (right - left);
+        const y = MID - AMP * Math.cos(u * (n - 1) * Math.PI);
+        d += s === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
+    }
+    return d;
+}
 
-const PILL_STAGGER = {
-    hidden: {},
-    show: { transition: { staggerChildren: 0.06, delayChildren: 0.2 } },
-};
+function wavePoints(n: number) {
+    if (n <= 1) {
+        return [{ x: W / 2, y: MID - AMP, isPeak: true }];
+    }
+    return skills.map((_, i) => {
+        const u = i / (n - 1);
+        const x = PAD_X + u * (W - 2 * PAD_X);
+        const y = MID - AMP * Math.cos(u * (n - 1) * Math.PI);
+        return { x, y, isPeak: y < MID - 2 };
+    });
+}
 
-const PILL_ITEM: any = {
-    hidden: { opacity: 0, y: 20, scale: 0.88 },
-    show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 260, damping: 20 } },
-};
+type TipPos = { left: number; top: number; flip: boolean };
 
 export function Skills() {
-    const [active, setActive] = useState(0);
-    const [dir, setDir] = useState(1);
-    const [paused, setPaused] = useState(false);
+    const pathD = useMemo(() => buildWavePath(skills.length), []);
+    const points = useMemo(() => wavePoints(skills.length), []);
 
-    const goTo = useCallback((idx: number) => {
-        setDir(idx >= active ? 1 : -1);
-        setActive(idx);
-    }, [active]);
+    const [hovered, setHovered] = useState<number | null>(null);
+    const [pinned, setPinned] = useState<number | null>(null);
+    const [tipPos, setTipPos] = useState<TipPos | null>(null);
 
-    const next = useCallback(() => {
-        setDir(1);
-        setActive(p => (p + 1) % skills.length);
+    const sectionRef = useRef<HTMLElement>(null);
+    const chartRef = useRef<HTMLDivElement>(null);
+    const leaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const pinnedRef = useRef(pinned);
+    pinnedRef.current = pinned;
+
+    const open = hovered !== null ? hovered : pinned;
+
+    const measureTip = useCallback(
+        (idx: number) => {
+            const el = chartRef.current;
+            if (!el || idx < 0) return;
+            const r = el.getBoundingClientRect();
+            const pt = points[idx];
+            if (!pt) return;
+
+            const cx = r.left + (pt.x / W) * r.width;
+            const cy = r.top + (pt.y / H) * r.height;
+            // Popup is centered with translate(-50%, …) — clamp the *center* X, not the left edge
+            const panelW = Math.min(300, window.innerWidth - 24);
+            const halfW = panelW / 2;
+            const margin = 12;
+            const left = Math.max(margin + halfW, Math.min(cx, window.innerWidth - margin - halfW));
+
+            // Peak (high): panel opens downward. Trough (low): panel opens upward.
+            let flip = !pt.isPeak;
+            let top = pt.isPeak ? cy + margin : cy - margin;
+
+            if (pt.isPeak && cy > window.innerHeight - 200) {
+                flip = true;
+                top = cy - margin;
+            }
+            if (!pt.isPeak && cy < 180) {
+                flip = false;
+                top = cy + margin;
+            }
+
+            setTipPos({ left, top, flip });
+        },
+        [points],
+    );
+
+    useLayoutEffect(() => {
+        if (open === null) {
+            setTipPos(null);
+            return;
+        }
+        measureTip(open);
+        const onScroll = () => measureTip(open);
+        const onResize = () => measureTip(open);
+        window.addEventListener("scroll", onScroll, true);
+        window.addEventListener("resize", onResize);
+        return () => {
+            window.removeEventListener("scroll", onScroll, true);
+            window.removeEventListener("resize", onResize);
+        };
+    }, [open, measureTip]);
+
+    const close = useCallback(() => {
+        setHovered(null);
+        setPinned(null);
+        setTipPos(null);
     }, []);
 
-    const prev = useCallback(() => {
-        setDir(-1);
-        setActive(p => (p - 1 + skills.length) % skills.length);
-    }, []);
-
-    // Auto-rotate every 4 s, paused on hover
     useEffect(() => {
-        if (paused) return;
-        const t = setInterval(next, 4000);
-        return () => clearInterval(t);
-    }, [paused, next]);
+        const onDoc = (e: MouseEvent) => {
+            const t = e.target as Node;
+            if (!sectionRef.current?.contains(t) && !document.getElementById("skill-floating-tip")?.contains(t)) {
+                close();
+            }
+        };
+        document.addEventListener("mousedown", onDoc);
+        return () => document.removeEventListener("mousedown", onDoc);
+    }, [close]);
 
-    const cat = skills[active];
-    const palette = PALETTES[active % PALETTES.length];
-    const iconKey = cat.icon.trim();
-    let Icon = Icons[iconKey as keyof typeof Icons];
-    if (!Icon) Icon = Icons.code;
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") close();
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [close]);
+
+    useEffect(
+        () => () => {
+            if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current);
+        },
+        [],
+    );
+
+    const cancelLeaveTimer = () => {
+        if (leaveTimerRef.current) {
+            clearTimeout(leaveTimerRef.current);
+            leaveTimerRef.current = null;
+        }
+    };
+
+    const handleEnter = (i: number) => {
+        cancelLeaveTimer();
+        setHovered(i);
+    };
+
+    const handleLeave = () => {
+        cancelLeaveTimer();
+        leaveTimerRef.current = setTimeout(() => {
+            if (pinnedRef.current === null) setHovered(null);
+        }, 140);
+    };
+
+    const handleTipEnter = () => {
+        cancelLeaveTimer();
+        if (open !== null) setHovered(open);
+    };
+
+    const handleTipLeave = () => {
+        if (pinnedRef.current === null) setHovered(null);
+    };
+
+    const handleClick = (i: number) => {
+        setPinned((p) => (p === i ? null : i));
+    };
+
+    const tipContent =
+        open !== null &&
+        tipPos &&
+        createPortal(
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={open}
+                    id="skill-floating-tip"
+                    role="tooltip"
+                    initial={{ opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 420, damping: 28 }}
+                    className="fixed z-[100] pointer-events-none"
+                    style={{
+                        left: tipPos.left,
+                        top: tipPos.top,
+                    }}
+                >
+                    {/* Inner wrapper keeps translate(-50%) — framer must not override transform (was shifting popup to bottom-right) */}
+                    <div
+                        className="pointer-events-auto w-[min(calc(100vw-24px),300px)]"
+                        style={{
+                            transform: tipPos.flip ? "translate(-50%, calc(-100% - 12px))" : "translate(-50%, 0)",
+                        }}
+                        onMouseEnter={handleTipEnter}
+                        onMouseLeave={handleTipLeave}
+                    >
+                    {/* Aurora + conic border */}
+                    <div
+                        className="relative rounded-2xl p-[1px] overflow-hidden"
+                        style={{
+                            background: `conic-gradient(from 120deg, ${PALETTES[open % PALETTES.length].accent}66, transparent 40%, ${PALETTES[open % PALETTES.length].accent}99, transparent 75%)`,
+                            boxShadow: `0 0 60px -10px ${PALETTES[open % PALETTES.length].glow}, 0 25px 50px -20px rgba(0,0,0,0.85)`,
+                        }}
+                    >
+                        <div className="rounded-2xl bg-zinc-950/90 backdrop-blur-2xl px-3.5 py-3 relative overflow-hidden">
+                            <div
+                                className="pointer-events-none absolute -top-16 -right-16 h-40 w-40 rounded-full opacity-40 blur-3xl"
+                                style={{ background: `radial-gradient(circle, ${PALETTES[open % PALETTES.length].accent} 0%, transparent 70%)` }}
+                            />
+                            <div
+                                className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full opacity-30 blur-2xl"
+                                style={{ background: "radial-gradient(circle, #6366f1 0%, transparent 70%)" }}
+                            />
+
+                            <div className="relative flex items-start gap-2.5 mb-3">
+                                <div
+                                    className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl shadow-lg"
+                                    style={{
+                                        background: `linear-gradient(145deg, ${PALETTES[open % PALETTES.length].accent}dd, #1e1b4b)`,
+                                        boxShadow: `0 0 20px ${PALETTES[open % PALETTES.length].glow}`,
+                                    }}
+                                >
+                                    <span className="text-[11px] font-black text-white">◇</span>
+                                </div>
+                                <div className="min-w-0 pt-0.5">
+                                    <p className="text-[9px] font-semibold uppercase tracking-[0.25em] text-violet-300/80 mb-0.5">
+                                        Skill cluster
+                                    </p>
+                                    <p className="text-sm font-bold uppercase tracking-wide text-white leading-tight">
+                                        {skills[open].title}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Chips — wrap, no scrollbars */}
+                            <div className="relative flex flex-wrap gap-1.5">
+                                {skills[open].skills.map((s) => (
+                                    <span
+                                        key={s}
+                                        className="inline-flex max-w-full items-center rounded-lg border border-white/10 bg-white/[0.06] px-2 py-1 text-[10px] leading-snug text-zinc-200 shadow-inner shadow-black/20"
+                                        style={{ borderColor: `${PALETTES[open % PALETTES.length].accent}35` }}
+                                    >
+                                        {s}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </motion.div>
+            </AnimatePresence>,
+            document.body,
+        );
 
     return (
         <section
+            ref={sectionRef}
             id="skills"
-            className="py-16 relative overflow-hidden"
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
+            className="w-full min-w-0 self-stretch py-7 md:py-10 relative overflow-x-hidden overflow-y-visible"
         >
-            {/* ── Ambient background glow that changes colour per category ── */}
-            <motion.div
-                key={`glow-${active}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1.2 }}
-                className="absolute inset-0 pointer-events-none -z-10"
+            <div
+                className="absolute inset-0 pointer-events-none -z-10 opacity-35"
                 style={{
-                    background: `radial-gradient(ellipse 70% 50% at 50% 50%, ${palette.glow}, transparent)`,
+                    background:
+                        "radial-gradient(ellipse 90% 55% at 50% 35%, rgba(139,92,246,0.08), transparent 60%)",
                 }}
             />
 
-            <div className="container px-4 mx-auto max-w-6xl">
-
-                {/* ── Section header ──────────────────────────────────────── */}
+            <div className="w-full max-w-[min(100%,1200px)] mx-auto px-4 sm:px-6">
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-8"
+                    transition={{ duration: 0.5 }}
+                    className="text-center mb-3 md:mb-5"
                 >
-                    <div className="inline-block mb-3 px-3 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
-                        <span className="text-xs font-medium text-zinc-300 tracking-wider uppercase">Expertise</span>
-                    </div>
-                    <h2 className="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-indigo-600">
-                        SKILL MATRIX
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4 tracking-tight text-white">
+                        Skill{" "}
+                        <span className="text-violet-500">Matrix</span>
                     </h2>
+                    <p className="text-zinc-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed px-2">
+                        Follow the curve — hover or tap a node to explore skills.
+                    </p>
                 </motion.div>
-
-                {/* ── Main stage ──────────────────────────────────────────── */}
-                <div className="relative min-h-[300px] flex flex-col items-center justify-center">
-
-                    {/* Subtle dot grid for depth with masking to blend into background */}
-                    <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:28px_28px] pointer-events-none" style={{ maskImage: "radial-gradient(ellipse 45% 45% at 50% 50%, #000 10%, transparent 80%)", WebkitMaskImage: "radial-gradient(ellipse 45% 45% at 50% 50%, #000 10%, transparent 80%)" }} />
-
-                    {/* Prev / Next arrows — larger & glowing */}
-                    {[
-                        { fn: prev, label: "←", side: "left-0 md:-left-16" },
-                        { fn: next, label: "→", side: "right-0 md:-right-16" },
-                    ].map(({ fn, label, side }) => (
-                        <motion.button
-                            key={label}
-                            onClick={fn}
-                            whileHover={{ scale: 1.12 }}
-                            whileTap={{ scale: 0.95 }}
-                            className={`absolute top-1/2 -translate-y-1/2 ${side} z-20 w-12 h-12 rounded-full border border-white/20 bg-white/[0.06] hover:border-white/40 text-zinc-300 hover:text-white transition-all duration-200 flex items-center justify-center text-xl font-bold backdrop-blur-sm`}
-                            style={{ boxShadow: `0 0 20px ${palette.accent}33` }}
-                        >
-                            {label}
-                        </motion.button>
-                    ))}
-
-                    {/* Animated category panel */}
-                    <AnimatePresence custom={dir} mode="wait">
-                        <motion.div
-                            key={active}
-                            custom={dir}
-                            variants={SLIDE}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                            className="w-full flex flex-col items-center text-center gap-5 px-10"
-                        >
-                            {/* ── Counter ── */}
-                            <div className="flex items-center gap-3">
-                                <span className="text-[10px] font-mono tracking-widest uppercase" style={{ color: palette.accent + "99" }}>category</span>
-                                <span className="text-2xl font-black font-mono tabular-nums" style={{ color: palette.accent }}>
-                                    {String(active + 1).padStart(2, "0")}
-                                </span>
-                                <span className="text-zinc-700 font-mono text-lg">/</span>
-                                <span className="text-lg font-bold font-mono text-zinc-600">{String(skills.length).padStart(2, "0")}</span>
-                            </div>
-
-                            {/* ── Icon with rotating orbit ring ── */}
-                            <div className="relative flex items-center justify-center">
-                                {/* Outer rotating ring */}
-                                <motion.div
-                                    animate={{ rotate: 360 }}
-                                    transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-                                    className="absolute w-28 h-28 rounded-full border border-dashed"
-                                    style={{ borderColor: palette.accent + "44" }}
-                                />
-                                {/* Inner pulsing glow */}
-                                <motion.div
-                                    animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-                                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                                    className="absolute w-20 h-20 rounded-full blur-xl"
-                                    style={{ background: palette.accent + "55" }}
-                                />
-                                {/* Icon box */}
-                                <motion.div
-                                    initial={{ scale: 0.6, rotate: -15, opacity: 0 }}
-                                    animate={{ scale: 1, rotate: 0, opacity: 1 }}
-                                    transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-                                    className={`relative w-16 h-16 rounded-2xl flex items-center justify-center bg-gradient-to-br ${palette.from} ${palette.to} z-10`}
-                                    style={{ boxShadow: `0 0 40px ${palette.accent}66` }}
-                                >
-                                    <Icon className="w-8 h-8 text-white" />
-                                </motion.div>
-                            </div>
-
-                            {/* ── Giant category name ── */}
-                            <motion.h3
-                                initial={{ opacity: 0, y: 16 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.08, duration: 0.4 }}
-                                className={`text-3xl sm:text-5xl md:text-6xl font-black tracking-tighter bg-gradient-to-r ${palette.from} ${palette.to} bg-clip-text text-transparent leading-none`}
-                            >
-                                {cat.title}
-                            </motion.h3>
-
-                            {/* ── Divider line ── */}
-                            <motion.div
-                                initial={{ scaleX: 0 }}
-                                animate={{ scaleX: 1 }}
-                                transition={{ delay: 0.18, duration: 0.5, ease: "circOut" }}
-                                className={`h-[2px] w-32 bg-gradient-to-r ${palette.from} ${palette.to} rounded-full`}
-                            />
-
-                            {/* ── Skill pills (staggered) ── */}
-                            <motion.div
-                                key={`pills-${active}`}
-                                variants={PILL_STAGGER}
-                                initial="hidden"
-                                animate="show"
-                                className="flex flex-wrap justify-center gap-2.5 max-w-2xl"
-                            >
-                                {cat.skills.map((skill, i) => (
-                                    <motion.span
-                                        key={i}
-                                        variants={PILL_ITEM}
-                                        whileHover={{ scale: 1.08, y: -2 }}
-                                        className="px-4 py-1.5 text-xs font-semibold tracking-widest uppercase rounded-full border text-zinc-200 bg-white/[0.05] cursor-default transition-colors hover:bg-white/10"
-                                        style={{ borderColor: palette.accent + "44" }}
-                                    >
-                                        {skill}
-                                    </motion.span>
-                                ))}
-                            </motion.div>
-                        </motion.div>
-                    </AnimatePresence>
-                </div>
-
-                {/* ── Category dot nav + progress bar ──────────────────────── */}
-                <div className="mt-8 flex flex-col items-center gap-3">
-
-                    {/* Progress bar */}
-                    {!paused && (
-                        <div className="w-48 h-[2px] bg-white/10 rounded-full overflow-hidden">
-                            <motion.div
-                                key={`bar-${active}`}
-                                initial={{ width: "0%" }}
-                                animate={{ width: "100%" }}
-                                transition={{ duration: 4, ease: "linear" }}
-                                className={`h-full bg-gradient-to-r ${palette.from} ${palette.to} rounded-full`}
-                            />
-                        </div>
-                    )}
-
-                    {/* Dot indicators */}
-                    <div className="flex items-center gap-2">
-                        {skills.map((_, i) => (
-                            <button
-                                key={i}
-                                onClick={() => goTo(i)}
-                                className="transition-all duration-300"
-                                aria-label={`Go to ${skills[i].title}`}
-                            >
-                                <motion.div
-                                    animate={{
-                                        width: i === active ? 24 : 6,
-                                        opacity: i === active ? 1 : 0.3,
-                                    }}
-                                    transition={{ duration: 0.3 }}
-                                    className={`h-1.5 rounded-full bg-gradient-to-r ${PALETTES[i % PALETTES.length].from} ${PALETTES[i % PALETTES.length].to}`}
-                                />
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Category quick-nav labels */}
-                    <div className="flex flex-wrap justify-center gap-1.5 mt-2">
-                        {skills.map((s, i) => (
-                            <button
-                                key={i}
-                                onClick={() => goTo(i)}
-                                className={`px-3 py-1 text-[10px] font-bold tracking-widest uppercase rounded-full border transition-all duration-200 ${i === active
-                                    ? "text-white border-white/30 bg-white/10"
-                                    : "text-zinc-600 border-white/5 hover:text-zinc-300 hover:border-white/15"
-                                    }`}
-                            >
-                                {s.title}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
             </div>
+
+            {/* Full-width wave — only tiny side padding so labels don’t clip on small screens */}
+            <div className="w-full mt-1 px-1.5 sm:px-3 md:px-4">
+                <div ref={chartRef} className="relative mx-auto w-full max-w-[100vw] overflow-visible pb-4">
+                    <div className="relative mx-auto w-full h-[clamp(260px,min(40vh,520px),560px)] min-h-[260px]">
+                            <svg
+                                viewBox={`0 0 ${W} ${H}`}
+                                className="absolute inset-0 h-full w-full max-h-none drop-shadow-[0_0_36px_rgba(139,92,246,0.22)]"
+                                preserveAspectRatio="xMidYMid meet"
+                                aria-hidden
+                            >
+                                <defs>
+                                    <linearGradient id="skill-wave-stroke" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.35" />
+                                        <stop offset="35%" stopColor="#a78bfa" stopOpacity="0.95" />
+                                        <stop offset="65%" stopColor="#6366f1" stopOpacity="0.9" />
+                                        <stop offset="100%" stopColor="#7c3aed" stopOpacity="0.4" />
+                                    </linearGradient>
+                                    <filter id="skill-wave-glow" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feGaussianBlur stdDeviation="3" result="blur" />
+                                        <feMerge>
+                                            <feMergeNode in="blur" />
+                                            <feMergeNode in="SourceGraphic" />
+                                        </feMerge>
+                                    </filter>
+                                    <filter id="skill-dot-glow" x="-100%" y="-100%" width="300%" height="300%">
+                                        <feGaussianBlur stdDeviation="2.5" result="b" />
+                                        <feMerge>
+                                            <feMergeNode in="b" />
+                                            <feMergeNode in="SourceGraphic" />
+                                        </feMerge>
+                                    </filter>
+                                    <filter id="skill-label-shadow" x="-35%" y="-35%" width="170%" height="170%">
+                                        <feDropShadow
+                                            dx="0"
+                                            dy="2"
+                                            stdDeviation="2.5"
+                                            floodColor="#000000"
+                                            floodOpacity="0.9"
+                                        />
+                                    </filter>
+                                </defs>
+
+                                <path
+                                    d={pathD}
+                                    fill="none"
+                                    stroke="url(#skill-wave-stroke)"
+                                    strokeWidth="26"
+                                    strokeLinecap="round"
+                                    opacity="0.15"
+                                    transform="translate(0, 6)"
+                                />
+
+                                <motion.path
+                                    d={pathD}
+                                    fill="none"
+                                    stroke="url(#skill-wave-stroke)"
+                                    strokeWidth="3.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    filter="url(#skill-wave-glow)"
+                                    initial={{ pathLength: 0, opacity: 0 }}
+                                    whileInView={{ pathLength: 1, opacity: 1 }}
+                                    viewport={{ once: true }}
+                                    transition={{ pathLength: { duration: 1.6, ease: "easeInOut" }, opacity: { duration: 0.4 } }}
+                                />
+
+                                <circle r="6" fill="#f5d0fe" filter="url(#skill-dot-glow)" opacity="0.95">
+                                    <animateMotion dur="16s" repeatCount="indefinite" path={pathD} rotate="auto" />
+                                </circle>
+
+                                {points.map((pt, i) => {
+                                    const p = PALETTES[i % PALETTES.length];
+                                    const labelAbove = pt.isPeak;
+                                    const ty = labelAbove ? pt.y - 48 : pt.y + 58;
+                                    const t = skills[i].title;
+                                    const len = t.length;
+                                    const fs =
+                                        len > 24 ? 16 : len > 20 ? 18 : len > 16 ? 20 : 22;
+                                    const sw = len > 22 ? 4 : 5;
+                                    return (
+                                        <g key={skills[i].title}>
+                                            <circle
+                                                cx={pt.x}
+                                                cy={pt.y}
+                                                r="36"
+                                                fill="transparent"
+                                                className="cursor-pointer"
+                                                onMouseEnter={() => handleEnter(i)}
+                                                onMouseLeave={handleLeave}
+                                                onClick={() => handleClick(i)}
+                                            />
+                                            <circle
+                                                cx={pt.x}
+                                                cy={pt.y}
+                                                r="15"
+                                                fill="#0a0a0c"
+                                                stroke={p.accent}
+                                                strokeWidth="3"
+                                                filter="url(#skill-dot-glow)"
+                                                className="pointer-events-none"
+                                            />
+                                            <circle cx={pt.x} cy={pt.y} r="5.5" fill={p.accent} className="pointer-events-none" />
+                                            <text
+                                                x={pt.x}
+                                                y={ty}
+                                                textAnchor="middle"
+                                                fill="#fafafa"
+                                                stroke="#09090b"
+                                                strokeWidth={sw}
+                                                strokeLinejoin="round"
+                                                paintOrder="stroke fill"
+                                                fontSize={fs}
+                                                fontWeight="800"
+                                                letterSpacing={len > 20 ? "0.02em" : "0.06em"}
+                                                filter="url(#skill-label-shadow)"
+                                                className="uppercase pointer-events-none select-none"
+                                                style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+                                            >
+                                                {t}
+                                            </text>
+                                            <rect
+                                                x={pt.x - 150}
+                                                y={ty - 28}
+                                                width="300"
+                                                height="44"
+                                                fill="transparent"
+                                                className="cursor-pointer"
+                                                onMouseEnter={() => handleEnter(i)}
+                                                onMouseLeave={handleLeave}
+                                                onClick={() => handleClick(i)}
+                                            />
+                                        </g>
+                                    );
+                                })}
+                            </svg>
+                    </div>
+                </div>
+            </div>
+
+            {tipContent}
         </section>
     );
 }
