@@ -3,6 +3,7 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from "path"
 import type { IncomingMessage, ServerResponse } from "http"
+// @ts-expect-error - Local JS file for contact mail logic
 import { parseAndValidateContact, sendPortfolioContact } from "./lib/contact-mail.js"
 
 function readRequestBody(req: IncomingMessage): Promise<string> {
