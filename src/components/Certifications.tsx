@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { certifications, Certification } from "@/data/certifications";
 import { Icons } from "@/components/Icons";
 
-const CertCard = ({ item, index, onClick }: { item: Certification; index: number; onClick?: () => void }) => {
+const CertCard = ({ item, onClick }: { item: Certification; onClick?: () => void }) => {
     const isAchievement = item.type === "Achievement";
     const hasSubCerts = item.subCertificates && item.subCertificates.length > 0;
 
@@ -142,7 +142,6 @@ export function Certifications() {
                         >
                             <CertCard
                                 item={item}
-                                index={idx}
                                 onClick={() => hasSubCerts && setSelectedCert(item)}
                             />
                         </motion.div>
@@ -163,7 +162,7 @@ export function Certifications() {
                             drag="x"
                             dragConstraints={{ left: 0, right: 0 }}
                             dragElastic={0.2}
-                            onDragEnd={(e, info) => {
+                            onDragEnd={(_, info) => {
                                 const swipeThreshold = 50;
                                 if (info.offset.x < -swipeThreshold) {
                                     // Swipe left -> Next
@@ -177,7 +176,6 @@ export function Certifications() {
                         >
                             <CertCard
                                 item={certifications[activeIdx]}
-                                index={activeIdx}
                                 onClick={() => {
                                     const item = certifications[activeIdx];
                                     const hasSubCerts = item.subCertificates && item.subCertificates.length > 0;

@@ -172,7 +172,7 @@ export function Projects() {
                                 drag="x"
                                 dragConstraints={{ left: 0, right: 0 }}
                                 dragElastic={0.2}
-                                onDragEnd={(e, info) => {
+                                onDragEnd={(_, info) => {
                                     const swipeThreshold = 50;
                                     if (info.offset.x < -swipeThreshold) {
                                         // Swipe left -> Next

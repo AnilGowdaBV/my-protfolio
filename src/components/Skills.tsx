@@ -20,15 +20,6 @@ const PALETTES = [
     { accent: "#a855f7", glow: "rgba(168,85,247,0.45)" },
 ];
 
-const shortLabels = [
-    "Code",
-    "UI/UX",
-    "APIs",
-    "Data",
-    "AI",
-    "Tools",
-    "Core"
-];
 
 const W_mob = 520;
 const H_mob = 1000;
@@ -127,8 +118,8 @@ export function Skills() {
             const left = Math.max(margin + halfW, Math.min(cx, window.innerWidth - margin - halfW));
 
             // Peak (high): panel opens downward. Trough (low): panel opens upward.
-            let flip = isMobile ? (pt.y > H_mob / 2) : !pt.isPeak;
-            let top = (isMobile ? (pt.y > H_mob / 2) : pt.isPeak) ? cy - margin : cy + margin;
+            let flip = isMobile ? (pt.y > H_mob / 2) : !(pt as any).isPeak;
+            let top = (isMobile ? (pt.y > H_mob / 2) : (pt as any).isPeak) ? cy - margin : cy + margin;
 
             if (!isMobile && (pt as any).isPeak && cy > window.innerHeight - 200) {
                 flip = true;
@@ -141,7 +132,7 @@ export function Skills() {
 
             setTipPos({ left, top, flip });
         },
-        [points],
+        [points, mobPoints],
     );
 
     useLayoutEffect(() => {
