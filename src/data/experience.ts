@@ -25,11 +25,11 @@ export const experience: ExperienceEntry[] = [
         period: "Nov 2025 – Apr 2026",
         tenureBadge: "6 months",
         summary:
-            "Full-stack delivery: UI, REST integrations, and shipping features with code review and iteration.",
+            "Full-stack development and system integration, utilizing cognitive tools to accelerate feature delivery and optimize codebases.",
         highlights: [
-            "Built end-to-end features with React/TypeScript, NestJS-style APIs, and MySQL.",
-            "REST integrations, auth-aware flows, and cross-stack debugging with Git-based reviews.",
-            "Iterative delivery with the team — scope, ship, and refine UX from feedback.",
+            "Built end-to-end features using React/TypeScript, NestJS-style backend architectures, and MySQL.",
+            "Integrated REST APIs and secure authentication, using LLM-assisted debugging and code optimization techniques.",
+            "Collaborated on iterative feature delivery, leveraging prompt engineering for rapid prototyping and clean system designs.",
         ],
         tech: [
             "React",
@@ -37,8 +37,8 @@ export const experience: ExperienceEntry[] = [
             "NestJS",
             "REST APIs",
             "MySQL",
+            "AI Engineering Tools",
             "Git",
-            "Tailwind CSS",
         ],
     },
 ];

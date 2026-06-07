@@ -5,7 +5,7 @@ export const education = [
         college: "Sri Venkateshwara College of Engineering, Bengaluru",
         university: "Visvesvaraya Technological University",
         year: "2022 - 2026",
-        score: "CGPA: 8.16",
+        score: "CGPA: 8.34",
         location: "Bengaluru, India",
         locationUrl: "https://www.google.com/maps/search/Sri+Venkateshwara+College+of+Engineering+Bengaluru",
     },

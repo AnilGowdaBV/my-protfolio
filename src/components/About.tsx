@@ -16,13 +16,13 @@ export function About() {
                 </h2>
                 <div className="max-w-3xl text-zinc-400 text-lg leading-relaxed space-y-6">
                     <p>
-                        I’m a <span className="text-white font-bold">developer</span> who focuses on building efficient solutions by combining <span className="text-violet-400 font-medium">strong engineering fundamentals</span> with modern <span className="text-indigo-400 font-medium">AI-assisted development</span>. I actively work with AI systems, prompt engineering, and intelligent tooling to accelerate development, solve complex problems, and explore new ways of building software.
+                        I’m an <span className="text-white font-bold">AI Systems & Full-Stack Engineer</span> who focuses on building intelligent solutions by combining <span className="text-violet-400 font-medium">robust system engineering</span> with cutting-edge <span className="text-indigo-400 font-medium">cognitive architectures</span>. I build autonomous agents, design scalable backend infrastructures, and integrate generative models to solve complex real-world challenges.
                     </p>
                     <p>
-                        My approach to development is driven by <span className="text-white font-medium">curiosity, experimentation, and continuous improvement</span>. I enjoy breaking down complex systems, refining workflows, and finding smarter ways to design and build scalable applications.
+                        My approach is driven by <span className="text-white font-medium">experimentation, data-driven systems, and continuous optimization</span>. I enjoy breaking down complex algorithms, engineering precise prompt frameworks, and architecting systems that bridge the gap between AI research and production software.
                     </p>
                     <p>
-                        I believe the future of software development lies in engineers who can <span className="text-zinc-200 font-medium">think critically</span>, understand systems deeply, and <span className="text-violet-400 font-medium">effectively collaborate with AI</span> to build faster, better, and more resilient solutions.
+                        I believe the next era of technology belongs to systems that can <span className="text-zinc-200 font-medium">reason contextually</span>, retrieve knowledge dynamically, and <span className="text-violet-400 font-medium">autonomously assist users and developers</span> in achieving highly specialized workflows.
                     </p>
                 </div>
             </motion.div>
@@ -40,8 +40,8 @@ export function About() {
                 {[
                     {
                         icon: Icons.terminal,
-                        title: "Clean Engineering",
-                        description: "Writing maintainable, well-structured code with strong fundamentals and clear system design.",
+                        title: "Core Systems",
+                        description: "Architecting reliable, modular backend services with Python, TypeScript, and robust database engines.",
                         color: "from-cyan-400 to-blue-500",
                         shadow: "shadow-cyan-500/20",
                         border: "group-hover:border-cyan-500/50",
@@ -49,8 +49,8 @@ export function About() {
                     },
                     {
                         icon: Icons.brain,
-                        title: "AI & Automation",
-                        description: "Leveraging AI-assisted workflows and prompt engineering to accelerate development and improve problem solving.",
+                        title: "Agentic Systems",
+                        description: "Developing autonomous AI agents, multi-agent orchestrations, and complex cognitive pipelines.",
                         color: "from-violet-400 to-fuchsia-500",
                         shadow: "shadow-violet-500/20",
                         border: "group-hover:border-violet-500/50",
@@ -58,8 +58,8 @@ export function About() {
                     },
                     {
                         icon: Icons.code,
-                        title: "Modern Tech Stack",
-                        description: "Building scalable applications using modern frameworks such as React, NestJS, and Python.",
+                        title: "RAG & Vector Search",
+                        description: "Implementing advanced semantic search engines, chunking strategies, and vector-store retrievals.",
                         color: "from-pink-400 to-rose-500",
                         shadow: "shadow-pink-500/20",
                         border: "group-hover:border-pink-500/50",
@@ -67,8 +67,8 @@ export function About() {
                     },
                     {
                         icon: Icons.cpu,
-                        title: "Intelligent Systems",
-                        description: "Designing systems that simplify complex workflows through automation and thoughtful architecture.",
+                        title: "Cognitive Workflows",
+                        description: "Orchestrating production LLM pipelines, prompt engineering frameworks, and intelligent tool integrations.",
                         color: "from-amber-400 to-orange-500",
                         shadow: "shadow-amber-500/20",
                         border: "group-hover:border-amber-500/50",

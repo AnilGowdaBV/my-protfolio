@@ -21,9 +21,16 @@ export const skills = [
         skills: ["MySQL", "Database Design", "Relational Modeling"],
     },
     {
-        title: "AI-Assisted Engineering",
+        title: "AI & Agentic Engineering",
         icon: "brain",
-        skills: ["Prompt-Driven Code Generation", "AI-Assisted Component & API Design", "AI-Assisted Debugging", "Code Refactoring & Optimization with AI"],
+        skills: [
+            "LLM Integration (Gemini, OpenAI, Anthropic)",
+            "Agentic Orchestration (LangChain, LangGraph)",
+            "Retrieval-Augmented Generation (RAG)",
+            "Vector Databases & Semantic Search",
+            "Advanced Prompt Engineering & Guardrails",
+            "Cognitive Workflows & Tool Use"
+        ],
     },
     {
         title: "Developer Tools",
@@ -33,6 +40,6 @@ export const skills = [
     {
         title: "Strengths",
         icon: "rocket",
-        skills: ["Full-Stack Feature Development", "RESTful API Design & Integration", "Problem Solving & Debugging", "Clean & Modular Code Architecture", "AI-Assisted Engineering (Prompt-Driven Development)", "Rapid Prototyping & Iterative Improvement"],
+        skills: ["Full-Stack Feature Development", "RESTful API Design & Integration", "Problem Solving & Debugging", "Clean & Modular Code Architecture", "AI & Agentic Systems Integration", "Rapid Prototyping & Iterative Improvement"],
     },
 ];

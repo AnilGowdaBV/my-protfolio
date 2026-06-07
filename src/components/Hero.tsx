@@ -5,10 +5,10 @@ import { Icons } from "@/components/Icons";
 import avatar from "@/assets/profile.jpg";
 
 const titles = [
-    "AI-Augmented Developer",
-    "Full-Stack Engineer",
-    "AI-Assisted Builder",
-    "Prompt Engineering Practitioner"
+    "AI Systems Engineer",
+    "Full-Stack AI Developer",
+    "Agentic Workflows Architect",
+    "LLM Integration Specialist"
 ];
 
 export function Hero() {
@@ -74,10 +74,10 @@ export function Hero() {
                                 
                                 <div className="space-y-1 pt-0.5 lg:max-w-[95%] xl:max-w-full">
                                     <p className="text-xs md:text-sm lg:text-base text-zinc-300 mx-auto lg:mx-0 leading-snug font-medium">
-                                        Building scalable web applications and intelligent developer workflows using modern full-stack technologies and AI-assisted engineering.
+                                        Building intelligent agentic systems, advanced LLM pipelines, and scalable full-stack applications leveraging cognitive workflows.
                                     </p>
                                     <p className="text-[10px] sm:text-xs md:text-sm text-zinc-500 mx-auto lg:mx-0 leading-snug hidden sm:block">
-                                        Focused on scalable systems, intelligent workflows, and practical software solutions.
+                                        Specializing in autonomous AI agents, Retrieval-Augmented Generation (RAG), and production-grade software engineering.
                                     </p>
                                 </div>
                             </div>
@@ -88,20 +88,20 @@ export function Hero() {
                             <h3 className="text-[10px] lg:text-xs font-semibold text-zinc-500 uppercase tracking-widest">Core Expertise</h3>
                             <div className="flex flex-wrap justify-center lg:justify-start gap-2">
                                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/10 hover:border-violet-500/50 hover:bg-violet-500/10 hover:shadow-[0_0_15px_rgba(139,92,246,0.2)] transition-all duration-300 group">
-                                    <Icons.layout className="w-3.5 h-3.5 text-violet-400 group-hover:scale-110 transition-transform" />
-                                    <span className="text-xs lg:text-sm text-zinc-300 group-hover:text-white transition-colors">Web Systems</span>
+                                    <Icons.brain className="w-3.5 h-3.5 text-violet-400 group-hover:scale-110 transition-transform" />
+                                    <span className="text-xs lg:text-sm text-zinc-300 group-hover:text-white transition-colors">AI & Agentic Systems</span>
                                 </div>
                                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/10 hover:border-indigo-500/50 hover:bg-indigo-500/10 hover:shadow-[0_0_15px_rgba(99,102,241,0.2)] transition-all duration-300 group">
-                                    <Icons.server className="w-3.5 h-3.5 text-indigo-400 group-hover:scale-110 transition-transform" />
-                                    <span className="text-xs lg:text-sm text-zinc-300 group-hover:text-white transition-colors">Backend Architecture</span>
+                                    <Icons.cpu className="w-3.5 h-3.5 text-indigo-400 group-hover:scale-110 transition-transform" />
+                                    <span className="text-xs lg:text-sm text-zinc-300 group-hover:text-white transition-colors">LLM Orchestration</span>
                                 </div>
                                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/10 hover:border-pink-500/50 hover:bg-pink-500/10 hover:shadow-[0_0_15px_rgba(236,72,153,0.2)] transition-all duration-300 group">
                                     <Icons.database className="w-3.5 h-3.5 text-pink-400 group-hover:scale-110 transition-transform" />
-                                    <span className="text-xs lg:text-sm text-zinc-300 group-hover:text-white transition-colors">Data Systems</span>
+                                    <span className="text-xs lg:text-sm text-zinc-300 group-hover:text-white transition-colors">Vector DBs & RAG</span>
                                 </div>
                                 <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/10 hover:border-amber-500/50 hover:bg-amber-500/10 hover:shadow-[0_0_15px_rgba(245,158,11,0.2)] transition-all duration-300 group">
-                                    <Icons.brain className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
-                                    <span className="text-xs lg:text-sm text-zinc-300 group-hover:text-white transition-colors">AI-Driven Devel.</span>
+                                    <Icons.server className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+                                    <span className="text-xs lg:text-sm text-zinc-300 group-hover:text-white transition-colors">Intelligent APIs</span>
                                 </div>
                             </div>
                         </div>
