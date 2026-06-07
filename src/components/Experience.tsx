@@ -47,14 +47,14 @@ export function Experience() {
                                     <div className="absolute inset-0 rounded-b-xl bg-gradient-to-br from-violet-500/[0.06] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                                     <div className="relative z-10">
-                                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
+                                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
                                             <div className="min-w-0 flex gap-2.5">
                                                 <Icons.briefcase className="w-4 h-4 text-violet-400 shrink-0 mt-0.5" />
                                                 <div className="space-y-0.5 min-w-0">
-                                                    <h3 className="text-base sm:text-lg font-bold text-white leading-snug group-hover:text-violet-100 transition-colors">
+                                                    <h3 className="text-[15px] sm:text-lg font-bold text-white leading-snug group-hover:text-violet-100 transition-colors">
                                                         {job.role}
                                                     </h3>
-                                                    <div className="text-sm sm:text-[15px] text-violet-200/95 font-semibold">
+                                                    <div className="text-xs sm:text-[15px] text-violet-200/95 font-semibold">
                                                         {job.company}
                                                     </div>
                                                     {job.locationUrl && (
@@ -83,19 +83,19 @@ export function Experience() {
                                             </div>
                                         </div>
 
-                                        <p className="text-zinc-400 text-xs sm:text-sm leading-snug mb-3 pl-3 border-l-2 border-violet-500/40">
+                                        <p className="text-zinc-300 text-xs sm:text-sm leading-relaxed mb-4 pl-3.5 border-l-2 border-violet-500/50">
                                             {job.summary}
                                         </p>
 
-                                        <div className="border-t border-white/5 pt-3 mb-3">
+                                        <div className="border-t border-white/5 pt-4 mb-4">
                                             <p className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold mb-2">
                                                 Impact & responsibilities
                                             </p>
-                                            <ul className="grid gap-2 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-1.5">
+                                            <ul className="grid gap-3 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-1.5">
                                                 {job.highlights.map((line, hIdx) => (
                                                     <li
                                                         key={hIdx}
-                                                        className="flex gap-2 text-[12px] sm:text-[13px] text-zinc-400 leading-snug"
+                                                        className="flex gap-2.5 items-start text-xs sm:text-[13px] text-zinc-300 leading-relaxed"
                                                     >
                                                         <span className="mt-1 shrink-0 w-3.5 h-3.5 rounded-full bg-violet-500/15 border border-violet-500/25 flex items-center justify-center">
                                                             <Icons.check className="w-2 h-2 text-violet-300" />
@@ -106,7 +106,7 @@ export function Experience() {
                                             </ul>
                                         </div>
 
-                                        <div className="border-t border-white/5 pt-3">
+                                        <div className="border-t border-white/5 pt-4">
                                             <p className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold mb-2">
                                                 Stack & tools
                                             </p>

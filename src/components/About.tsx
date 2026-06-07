@@ -81,7 +81,7 @@ export function About() {
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: index * 0.1 }}
                         viewport={{ once: true }}
-                        className={`group relative p-7 md:p-8 rounded-3xl border border-white/[0.07] bg-zinc-900/40 hover:bg-zinc-900/70 backdrop-blur-sm transition-all duration-500 overflow-hidden ${feature.border} hover:shadow-2xl ${feature.hoverGlow} hover:-translate-y-1.5`}
+                        className={`group relative p-5 sm:p-7 md:p-8 rounded-3xl border border-white/[0.07] bg-zinc-900/40 hover:bg-zinc-900/70 backdrop-blur-sm transition-all duration-500 overflow-hidden ${feature.border} hover:shadow-2xl ${feature.hoverGlow} hover:-translate-y-1.5`}
                     >
                         {/* Hover Gradient Bloom */}
                         <div className={`absolute inset-0 opacity-0 group-hover:opacity-15 bg-gradient-to-br ${feature.color} transition-opacity duration-500 pointer-events-none`} />
@@ -89,20 +89,22 @@ export function About() {
                         {/* Top Accent Line */}
                         <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${feature.color} scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`} />
 
-                        <div className="relative z-10 flex flex-col items-center text-center h-full">
+                        <div className="relative z-10 flex flex-row sm:flex-col items-start sm:items-center text-left sm:text-center gap-4 sm:gap-0 h-full">
                             {/* Icon Container */}
-                            <div className={`mb-6 p-4 rounded-2xl bg-zinc-950 border border-white/10 ${feature.shadow} shadow-lg group-hover:scale-110 transition-transform duration-500 relative overflow-hidden`}>
+                            <div className={`mb-0 sm:mb-6 p-3 sm:p-4 shrink-0 rounded-2xl bg-zinc-950 border border-white/10 ${feature.shadow} shadow-lg group-hover:scale-110 transition-transform duration-500 relative overflow-hidden`}>
                                 <div className={`absolute inset-0 opacity-20 bg-gradient-to-tr ${feature.color}`} />
-                                <feature.icon className="w-8 h-8 text-white relative z-10" />
+                                <feature.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white relative z-10" />
                             </div>
 
-                            <h3 className="text-lg md:text-xl font-bold mb-3 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-zinc-300 transition-colors">
-                                {feature.title}
-                            </h3>
+                            <div className="flex flex-col flex-1">
+                                <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1 sm:mb-3 text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-zinc-300 transition-colors">
+                                    {feature.title}
+                                </h3>
 
-                            <p className="text-[15px] md:text-base text-zinc-300/95 leading-relaxed group-hover:text-zinc-100 transition-colors">
-                                {feature.description}
-                            </p>
+                                <p className="text-xs sm:text-[15px] md:text-base text-zinc-300/95 leading-normal sm:leading-relaxed group-hover:text-zinc-100 transition-colors">
+                                    {feature.description}
+                                </p>
+                            </div>
                         </div>
                     </motion.div>
                 ))}

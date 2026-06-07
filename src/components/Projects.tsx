@@ -1,6 +1,6 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue, useSpring, AnimatePresence } from "framer-motion";
 import { projects as staticProjects } from "@/data/projects";
 import { Icons } from "@/components/Icons";
 import { useProjects } from "@/hooks/useProjects";
@@ -112,6 +112,16 @@ const ProjectCard = ({ project, index }: { project: typeof staticProjects[0]; in
 export function Projects() {
     const { data: projectsData, isLoading } = useProjects();
     const projects = projectsData || [];
+    const [activeIdx, setActiveIdx] = useState(0);
+
+    // Auto-advance slideshow every 5 seconds
+    useEffect(() => {
+        if (projects.length <= 1) return;
+        const interval = setInterval(() => {
+            setActiveIdx((prev) => (prev + 1) % projects.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [projects.length, activeIdx]);
 
     if (isLoading) {
         return (
@@ -142,10 +152,70 @@ export function Projects() {
                     </p>
                 </motion.div >
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto perspective-1000">
+                {/* Desktop view: standard grid */}
+                <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto perspective-1000">
                     {projects.map((project, index) => (
                         <ProjectCard key={index} project={project} index={index} />
                     ))}
+                </div>
+
+                {/* Mobile view: interactive slideshow carousel */}
+                <div className="block md:hidden w-full max-w-[340px] mx-auto relative px-2">
+                    <div className="relative w-full min-h-[350px] flex flex-col justify-between items-center">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activeIdx}
+                                initial={{ opacity: 0, x: 50 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -50 }}
+                                transition={{ duration: 0.3 }}
+                                drag="x"
+                                dragConstraints={{ left: 0, right: 0 }}
+                                dragElastic={0.2}
+                                onDragEnd={(e, info) => {
+                                    const swipeThreshold = 50;
+                                    if (info.offset.x < -swipeThreshold) {
+                                        // Swipe left -> Next
+                                        setActiveIdx((prev) => (prev + 1) % projects.length);
+                                    } else if (info.offset.x > swipeThreshold) {
+                                        // Swipe right -> Prev
+                                        setActiveIdx((prev) => (prev - 1 + projects.length) % projects.length);
+                                    }
+                                }}
+                                className="w-full h-full select-none cursor-grab active:cursor-grabbing touch-pan-y"
+                            >
+                                <ProjectCard project={projects[activeIdx]} index={activeIdx} />
+                            </motion.div>
+                        </AnimatePresence>
+
+                        {/* Navigation Controls */}
+                        <div className="flex items-center justify-between w-full mt-4 px-2">
+                            <button
+                                onClick={() => setActiveIdx((prev) => (prev - 1 + projects.length) % projects.length)}
+                                className="p-2.5 rounded-full bg-zinc-900 border border-white/10 hover:border-violet-500/50 hover:bg-violet-500/10 text-zinc-300 hover:text-white transition-all cursor-pointer shadow-lg active:scale-95"
+                            >
+                                <Icons.arrowLeft className="w-4 h-4" />
+                            </button>
+
+                            {/* Dots indicators */}
+                            <div className="flex gap-2">
+                                {projects.map((_, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => setActiveIdx(i)}
+                                        className={`w-2 h-2 rounded-full transition-all duration-300 ${i === activeIdx ? "bg-violet-500 w-4" : "bg-zinc-700"}`}
+                                    />
+                                ))}
+                            </div>
+
+                            <button
+                                onClick={() => setActiveIdx((prev) => (prev + 1) % projects.length)}
+                                className="p-2.5 rounded-full bg-zinc-900 border border-white/10 hover:border-violet-500/50 hover:bg-violet-500/10 text-zinc-300 hover:text-white transition-all cursor-pointer shadow-lg active:scale-95"
+                            >
+                                <Icons.arrowLeft className="w-4 h-4 rotate-180" />
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div >
         </section >

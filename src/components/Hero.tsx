@@ -22,7 +22,7 @@ export function Hero() {
     }, []);
 
     return (
-        <section className="relative w-full min-h-[90vh] lg:h-screen flex items-center justify-center overflow-x-hidden pt-16 lg:pt-12 pb-4">
+        <section className="relative w-full min-h-[90vh] lg:h-screen flex items-center justify-center overflow-x-hidden pt-20 lg:pt-12 pb-16 lg:pb-4">
             {/* Background Atmosphere */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-violet-600/20 rounded-full blur-[120px] mix-blend-screen" />
@@ -30,7 +30,7 @@ export function Hero() {
             </div>
 
             <div className="w-full max-w-[98%] lg:max-w-[96%] xl:max-w-[94%] mx-auto px-4 md:px-8 z-10 flex-1 flex flex-col justify-center">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 xl:gap-8 items-center mt-8 lg:mt-12">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center mt-4 lg:mt-12">
 
                     {/* Left Column: Text Content */}
                     <motion.div
@@ -150,15 +150,15 @@ export function Hero() {
                             </div>
                         </div>
 
-                        <div className="flex gap-3 lg:gap-4 justify-center lg:justify-start pt-1 lg:pt-2">
-                            <Button asChild className="h-10 lg:h-11 px-6 lg:px-8 rounded-full bg-white text-black hover:bg-zinc-200 text-sm lg:text-base font-semibold shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-all duration-300 hover:scale-[1.03] active:scale-95">
-                                <a href="/Anil_BV.pdf" download="Anil_BV.pdf">
+                        <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 justify-center lg:justify-start pt-1 lg:pt-2 w-full max-w-[280px] sm:max-w-none mx-auto sm:mx-0">
+                            <Button asChild className="w-full sm:w-auto h-10 lg:h-11 px-6 lg:px-8 rounded-full bg-white text-black hover:bg-zinc-200 text-sm lg:text-base font-semibold shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-all duration-300 hover:scale-[1.03] active:scale-95">
+                                <a href="/Anil_BV.pdf" download="Anil_BV.pdf" className="flex items-center justify-center w-full">
                                     Download Resume
                                     <Icons.download className="ml-2 w-3.5 h-3.5 lg:w-4 lg:h-4" />
                                 </a>
                             </Button>
-                            <Button asChild variant="outline" className="h-10 lg:h-11 px-6 lg:px-8 rounded-full border-white/10 bg-black/40 hover:bg-white/10 text-white text-sm lg:text-base hover:text-violet-300 hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:border-violet-500/50 transition-all duration-300 hover:scale-[1.03] active:scale-95">
-                                <a href="#projects">
+                            <Button asChild variant="outline" className="w-full sm:w-auto h-10 lg:h-11 px-6 lg:px-8 rounded-full border-white/10 bg-black/40 hover:bg-white/10 text-white text-sm lg:text-base hover:text-violet-300 hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] hover:border-violet-500/50 transition-all duration-300 hover:scale-[1.03] active:scale-95">
+                                <a href="#projects" className="flex items-center justify-center w-full">
                                     View Projects
                                     <Icons.arrowLeft className="ml-2 w-3.5 h-3.5 lg:w-4 lg:h-4 rotate-180" />
                                 </a>
@@ -177,7 +177,7 @@ export function Hero() {
                         }}
                         className="relative flex justify-center order-1 lg:order-2 w-full lg:w-11/12 xl:w-full mx-auto"
                     >
-                        <div className="relative w-full max-w-[220px] sm:max-w-[260px] md:max-w-[280px] lg:max-w-[320px] xl:max-w-[360px] aspect-[4/5] lg:aspect-square">
+                        <div className="relative w-full max-w-[170px] sm:max-w-[240px] md:max-w-[280px] lg:max-w-[320px] xl:max-w-[360px] aspect-square">
                             {/* Rotating Ring */}
                             <motion.div
                                 animate={{ rotate: 360 }}

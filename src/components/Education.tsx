@@ -51,22 +51,25 @@ export function Education() {
                                 <div className="relative z-10 grid md:grid-cols-[1fr_auto] gap-4 md:gap-8 items-start">
                                     <div className="space-y-2">
 
-                                        {/* Mobile Header (Year) */}
-                                        <div className="md:hidden flex items-center justify-between mb-2">
+                                        {/* Mobile Header (Year & Grade) */}
+                                        <div className="md:hidden flex items-center justify-between mb-3">
                                             <span className="px-2 py-0.5 rounded-md bg-violet-500/10 text-violet-300 text-xs font-mono border border-violet-500/20">
                                                 {edu.year}
                                             </span>
+                                            <span className="px-2 py-0.5 rounded-md bg-zinc-800/80 border border-white/5 text-[11px] font-mono text-zinc-300">
+                                                {edu.score}
+                                            </span>
                                         </div>
 
-                                        <h3 className="text-xl font-bold text-zinc-100 group-hover:text-white transition-colors">
+                                        <h3 className="text-[17px] sm:text-xl font-bold text-zinc-100 group-hover:text-white transition-colors">
                                             {edu.degree}
                                         </h3>
 
                                         <div className="flex flex-col gap-1">
-                                            <span className="text-base text-violet-200/80 font-medium">
+                                            <span className="text-sm sm:text-base text-violet-200/80 font-medium">
                                                 {edu.college}
                                             </span>
-                                            <span className="text-sm text-zinc-500">
+                                            <span className="text-xs sm:text-sm text-zinc-400">
                                                 {edu.university}
                                             </span>
                                         </div>

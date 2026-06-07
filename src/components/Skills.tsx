@@ -20,6 +20,45 @@ const PALETTES = [
     { accent: "#a855f7", glow: "rgba(168,85,247,0.45)" },
 ];
 
+const shortLabels = [
+    "Code",
+    "UI/UX",
+    "APIs",
+    "Data",
+    "AI",
+    "Tools",
+    "Core"
+];
+
+const W_mob = 520;
+const H_mob = 1000;
+const AMP_mob = 130;
+const MID_mob = 260;
+const PAD_Y = 50;
+
+function buildMobileWavePath(n: number): string {
+    const top = PAD_Y;
+    const bottom = H_mob - PAD_Y;
+    const steps = 360;
+    let d = "";
+    for (let s = 0; s <= steps; s++) {
+        const u = s / steps;
+        const y = top + u * (bottom - top);
+        const x = MID_mob - AMP_mob * Math.cos(u * (n - 1) * Math.PI);
+        d += s === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`;
+    }
+    return d;
+}
+
+function mobileWavePoints(n: number) {
+    return skills.map((_, i) => {
+        const u = i / (n - 1);
+        const y = PAD_Y + u * (H_mob - 2 * PAD_Y);
+        const x = MID_mob - AMP_mob * Math.cos(u * (n - 1) * Math.PI);
+        return { x, y, isLeft: x < MID_mob - 2 };
+    });
+}
+
 function buildWavePath(n: number): string {
     const left = PAD_X;
     const right = W - PAD_X;
@@ -51,6 +90,8 @@ type TipPos = { left: number; top: number; flip: boolean };
 export function Skills() {
     const pathD = useMemo(() => buildWavePath(skills.length), []);
     const points = useMemo(() => wavePoints(skills.length), []);
+    const mobPathD = useMemo(() => buildMobileWavePath(skills.length), []);
+    const mobPoints = useMemo(() => mobileWavePoints(skills.length), []);
 
     const [hovered, setHovered] = useState<number | null>(null);
     const [pinned, setPinned] = useState<number | null>(null);
@@ -69,11 +110,16 @@ export function Skills() {
             const el = chartRef.current;
             if (!el || idx < 0) return;
             const r = el.getBoundingClientRect();
-            const pt = points[idx];
+            
+            const isMobile = window.innerWidth < 768;
+            const pt = isMobile ? mobPoints[idx] : points[idx];
             if (!pt) return;
 
-            const cx = r.left + (pt.x / W) * r.width;
-            const cy = r.top + (pt.y / H) * r.height;
+            const curW = isMobile ? W_mob : W;
+            const curH = isMobile ? H_mob : H;
+
+            const cx = r.left + (pt.x / curW) * r.width;
+            const cy = r.top + (pt.y / curH) * r.height;
             // Popup is centered with translate(-50%, …) — clamp the *center* X, not the left edge
             const panelW = Math.min(300, window.innerWidth - 24);
             const halfW = panelW / 2;
@@ -81,14 +127,14 @@ export function Skills() {
             const left = Math.max(margin + halfW, Math.min(cx, window.innerWidth - margin - halfW));
 
             // Peak (high): panel opens downward. Trough (low): panel opens upward.
-            let flip = !pt.isPeak;
-            let top = pt.isPeak ? cy + margin : cy - margin;
+            let flip = isMobile ? (pt.y > H_mob / 2) : !pt.isPeak;
+            let top = (isMobile ? (pt.y > H_mob / 2) : pt.isPeak) ? cy - margin : cy + margin;
 
-            if (pt.isPeak && cy > window.innerHeight - 200) {
+            if (!isMobile && (pt as any).isPeak && cy > window.innerHeight - 200) {
                 flip = true;
                 top = cy - margin;
             }
-            if (!pt.isPeak && cy < 180) {
+            if (!isMobile && !(pt as any).isPeak && cy < 180) {
                 flip = false;
                 top = cy + margin;
             }
@@ -296,143 +342,281 @@ export function Skills() {
                 </motion.div>
             </div>
 
-            {/* Full-width wave — only tiny side padding so labels don’t clip on small screens */}
-            <div className="w-full mt-1 px-1.5 sm:px-3 md:px-4">
-                <div ref={chartRef} className="relative mx-auto w-full max-w-[100vw] overflow-visible pb-4">
-                    <div className="relative mx-auto w-full h-[clamp(260px,min(40vh,520px),560px)] min-h-[260px]">
-                            <svg
-                                viewBox={`0 0 ${W} ${H}`}
-                                className="absolute inset-0 h-full w-full max-h-none drop-shadow-[0_0_36px_rgba(139,92,246,0.22)]"
-                                preserveAspectRatio="xMidYMid meet"
-                                aria-hidden
-                            >
-                                <defs>
-                                    <linearGradient id="skill-wave-stroke" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.35" />
-                                        <stop offset="35%" stopColor="#a78bfa" stopOpacity="0.95" />
-                                        <stop offset="65%" stopColor="#6366f1" stopOpacity="0.9" />
-                                        <stop offset="100%" stopColor="#7c3aed" stopOpacity="0.4" />
-                                    </linearGradient>
-                                    <filter id="skill-wave-glow" x="-20%" y="-20%" width="140%" height="140%">
-                                        <feGaussianBlur stdDeviation="3" result="blur" />
-                                        <feMerge>
-                                            <feMergeNode in="blur" />
-                                            <feMergeNode in="SourceGraphic" />
-                                        </feMerge>
-                                    </filter>
-                                    <filter id="skill-dot-glow" x="-100%" y="-100%" width="300%" height="300%">
-                                        <feGaussianBlur stdDeviation="2.5" result="b" />
-                                        <feMerge>
-                                            <feMergeNode in="b" />
-                                            <feMergeNode in="SourceGraphic" />
-                                        </feMerge>
-                                    </filter>
-                                    <filter id="skill-label-shadow" x="-35%" y="-35%" width="170%" height="170%">
-                                        <feDropShadow
-                                            dx="0"
-                                            dy="2"
-                                            stdDeviation="2.5"
-                                            floodColor="#000000"
-                                            floodOpacity="0.9"
-                                        />
-                                    </filter>
-                                </defs>
-
-                                <path
-                                    d={pathD}
-                                    fill="none"
-                                    stroke="url(#skill-wave-stroke)"
-                                    strokeWidth="26"
-                                    strokeLinecap="round"
-                                    opacity="0.15"
-                                    transform="translate(0, 6)"
+            {/* Wave Chart Container - Scales on all screens */}
+            <div ref={chartRef} className="w-full mt-1 px-2 select-none relative overflow-visible pb-4">
+                
+                {/* Desktop Horizontal Wave view (Hidden on mobile) */}
+                <div className="hidden md:block relative mx-auto w-full h-[clamp(260px,min(40vh,520px),560px)] min-h-[260px]">
+                    <svg
+                        viewBox={`0 0 ${W} ${H}`}
+                        className="absolute inset-0 h-full w-full max-h-none drop-shadow-[0_0_36px_rgba(139,92,246,0.22)]"
+                        preserveAspectRatio="xMidYMid meet"
+                        aria-hidden
+                    >
+                        <defs>
+                            <linearGradient id="skill-wave-stroke" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.35" />
+                                <stop offset="35%" stopColor="#a78bfa" stopOpacity="0.95" />
+                                <stop offset="65%" stopColor="#6366f1" stopOpacity="0.9" />
+                                <stop offset="100%" stopColor="#7c3aed" stopOpacity="0.4" />
+                            </linearGradient>
+                            <filter id="skill-wave-glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="3" result="blur" />
+                                <feMerge>
+                                    <feMergeNode in="blur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                            <filter id="skill-dot-glow" x="-100%" y="-100%" width="300%" height="300%">
+                                <feGaussianBlur stdDeviation="2.5" result="b" />
+                                <feMerge>
+                                    <feMergeNode in="b" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                            <filter id="skill-label-shadow" x="-35%" y="-35%" width="170%" height="170%">
+                                <feDropShadow
+                                    dx="0"
+                                    dy="2"
+                                    stdDeviation="2.5"
+                                    floodColor="#000000"
+                                    floodOpacity="0.9"
                                 />
+                            </filter>
+                        </defs>
 
-                                <motion.path
-                                    d={pathD}
-                                    fill="none"
-                                    stroke="url(#skill-wave-stroke)"
-                                    strokeWidth="3.5"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    filter="url(#skill-wave-glow)"
-                                    initial={{ pathLength: 0, opacity: 0 }}
-                                    whileInView={{ pathLength: 1, opacity: 1 }}
-                                    viewport={{ once: true }}
-                                    transition={{ pathLength: { duration: 1.6, ease: "easeInOut" }, opacity: { duration: 0.4 } }}
-                                />
+                        <path
+                            d={pathD}
+                            fill="none"
+                            stroke="url(#skill-wave-stroke)"
+                            strokeWidth="26"
+                            strokeLinecap="round"
+                            opacity="0.15"
+                            transform="translate(0, 6)"
+                        />
 
-                                <circle r="6" fill="#f5d0fe" filter="url(#skill-dot-glow)" opacity="0.95">
-                                    <animateMotion dur="16s" repeatCount="indefinite" path={pathD} rotate="auto" />
-                                </circle>
+                        <motion.path
+                            d={pathD}
+                            fill="none"
+                            stroke="url(#skill-wave-stroke)"
+                            strokeWidth="3.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            filter="url(#skill-wave-glow)"
+                            initial={{ pathLength: 0, opacity: 0 }}
+                            whileInView={{ pathLength: 1, opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ pathLength: { duration: 1.6, ease: "easeInOut" }, opacity: { duration: 0.4 } }}
+                        />
 
-                                {points.map((pt, i) => {
-                                    const p = PALETTES[i % PALETTES.length];
-                                    const labelAbove = pt.isPeak;
-                                    const ty = labelAbove ? pt.y - 48 : pt.y + 58;
-                                    const t = skills[i].title;
-                                    const len = t.length;
-                                    const fs =
-                                        len > 24 ? 16 : len > 20 ? 18 : len > 16 ? 20 : 22;
-                                    const sw = len > 22 ? 4 : 5;
-                                    return (
-                                        <g key={skills[i].title}>
-                                            <circle
-                                                cx={pt.x}
-                                                cy={pt.y}
-                                                r="36"
-                                                fill="transparent"
-                                                className="cursor-pointer"
-                                                onMouseEnter={() => handleEnter(i)}
-                                                onMouseLeave={handleLeave}
-                                                onClick={() => handleClick(i)}
-                                            />
-                                            <circle
-                                                cx={pt.x}
-                                                cy={pt.y}
-                                                r="15"
-                                                fill="#0a0a0c"
-                                                stroke={p.accent}
-                                                strokeWidth="3"
-                                                filter="url(#skill-dot-glow)"
-                                                className="pointer-events-none"
-                                            />
-                                            <circle cx={pt.x} cy={pt.y} r="5.5" fill={p.accent} className="pointer-events-none" />
-                                            <text
-                                                x={pt.x}
-                                                y={ty}
-                                                textAnchor="middle"
-                                                fill="#fafafa"
-                                                stroke="#09090b"
-                                                strokeWidth={sw}
-                                                strokeLinejoin="round"
-                                                paintOrder="stroke fill"
-                                                fontSize={fs}
-                                                fontWeight="800"
-                                                letterSpacing={len > 20 ? "0.02em" : "0.06em"}
-                                                filter="url(#skill-label-shadow)"
-                                                className="uppercase pointer-events-none select-none"
-                                                style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
-                                            >
-                                                {t}
-                                            </text>
-                                            <rect
-                                                x={pt.x - 150}
-                                                y={ty - 28}
-                                                width="300"
-                                                height="44"
-                                                fill="transparent"
-                                                className="cursor-pointer"
-                                                onMouseEnter={() => handleEnter(i)}
-                                                onMouseLeave={handleLeave}
-                                                onClick={() => handleClick(i)}
-                                            />
-                                        </g>
-                                    );
-                                })}
-                            </svg>
-                    </div>
+                        <circle r="6" fill="#f5d0fe" filter="url(#skill-dot-glow)" opacity="0.95">
+                            <animateMotion dur="16s" repeatCount="indefinite" path={pathD} rotate="auto" />
+                        </circle>
+
+                        {points.map((pt, i) => {
+                            const p = PALETTES[i % PALETTES.length];
+                            const labelAbove = pt.isPeak;
+                            const ty = labelAbove ? pt.y - 48 : pt.y + 58;
+                            const t = skills[i].title;
+                            const len = t.length;
+                            const fs =
+                                len > 24 ? 16 : len > 20 ? 18 : len > 16 ? 20 : 22;
+                            const sw = len > 22 ? 4 : 5;
+                            return (
+                                <g key={skills[i].title}>
+                                    <circle
+                                        cx={pt.x}
+                                        cy={pt.y}
+                                        r="36"
+                                        fill="transparent"
+                                        className="cursor-pointer"
+                                        onMouseEnter={() => handleEnter(i)}
+                                        onMouseLeave={handleLeave}
+                                        onClick={() => handleClick(i)}
+                                    />
+                                    <circle
+                                        cx={pt.x}
+                                        cy={pt.y}
+                                        r="15"
+                                        fill="#0a0a0c"
+                                        stroke={p.accent}
+                                        strokeWidth="3"
+                                        filter="url(#skill-dot-glow)"
+                                        className="pointer-events-none"
+                                    />
+                                    <circle cx={pt.x} cy={pt.y} r="5.5" fill={p.accent} className="pointer-events-none" />
+                                    
+                                    <text
+                                        x={pt.x}
+                                        y={ty}
+                                        textAnchor="middle"
+                                        fill="#fafafa"
+                                        stroke="#09090b"
+                                        strokeWidth={sw}
+                                        strokeLinejoin="round"
+                                        paintOrder="stroke fill"
+                                        fontSize={fs}
+                                        fontWeight="800"
+                                        letterSpacing={len > 20 ? "0.02em" : "0.06em"}
+                                        filter="url(#skill-label-shadow)"
+                                        className="uppercase pointer-events-none select-none"
+                                        style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+                                    >
+                                        {t}
+                                    </text>
+
+                                    <rect
+                                        x={pt.x - 150}
+                                        y={ty - 28}
+                                        width="300"
+                                        height="44"
+                                        fill="transparent"
+                                        className="cursor-pointer"
+                                        onMouseEnter={() => handleEnter(i)}
+                                        onMouseLeave={handleLeave}
+                                        onClick={() => handleClick(i)}
+                                    />
+                                </g>
+                            );
+                        })}
+                    </svg>
                 </div>
+
+                {/* Mobile Vertical Wave View (Hidden on desktop) */}
+                <div className="block md:hidden relative mx-auto w-full max-w-[440px] h-[520px] min-h-[420px]">
+                    <svg
+                        viewBox={`0 0 ${W_mob} ${H_mob}`}
+                        className="absolute inset-0 h-full w-full drop-shadow-[0_0_36px_rgba(139,92,246,0.22)]"
+                        preserveAspectRatio="xMidYMid meet"
+                        aria-hidden
+                    >
+                        <defs>
+                            <linearGradient id="skill-wave-stroke-mob" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.35" />
+                                <stop offset="35%" stopColor="#a78bfa" stopOpacity="0.95" />
+                                <stop offset="65%" stopColor="#6366f1" stopOpacity="0.9" />
+                                <stop offset="100%" stopColor="#7c3aed" stopOpacity="0.4" />
+                            </linearGradient>
+                            <filter id="skill-wave-glow-mob" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="3" result="blur" />
+                                <feMerge>
+                                    <feMergeNode in="blur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                            <filter id="skill-dot-glow-mob" x="-100%" y="-100%" width="300%" height="300%">
+                                <feGaussianBlur stdDeviation="2.5" result="b" />
+                                <feMerge>
+                                    <feMergeNode in="b" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                            <filter id="skill-label-shadow-mob" x="-35%" y="-35%" width="170%" height="170%">
+                                <feDropShadow
+                                    dx="0"
+                                    dy="2"
+                                    stdDeviation="2.5"
+                                    floodColor="#000000"
+                                    floodOpacity="0.9"
+                                />
+                            </filter>
+                        </defs>
+
+                        <path
+                            d={mobPathD}
+                            fill="none"
+                            stroke="url(#skill-wave-stroke-mob)"
+                            strokeWidth="26"
+                            strokeLinecap="round"
+                            opacity="0.15"
+                            transform="translate(4, 0)"
+                        />
+
+                        <motion.path
+                            d={mobPathD}
+                            fill="none"
+                            stroke="url(#skill-wave-stroke-mob)"
+                            strokeWidth="4"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            filter="url(#skill-wave-glow-mob)"
+                            initial={{ pathLength: 0, opacity: 0 }}
+                            whileInView={{ pathLength: 1, opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ pathLength: { duration: 1.6, ease: "easeInOut" }, opacity: { duration: 0.4 } }}
+                        />
+
+                        <circle r="6" fill="#f5d0fe" filter="url(#skill-dot-glow-mob)" opacity="0.95">
+                            <animateMotion dur="16s" repeatCount="indefinite" path={mobPathD} rotate="auto" />
+                        </circle>
+
+                        {mobPoints.map((pt, i) => {
+                            const p = PALETTES[i % PALETTES.length];
+                            const t = skills[i].title;
+                            const tx = pt.isLeft ? pt.x + 36 : pt.x - 36;
+                            const textAnchor = pt.isLeft ? "start" : "end";
+                            const ty = pt.y + 7;
+
+                            return (
+                                <g key={skills[i].title}>
+                                    <circle
+                                        cx={pt.x}
+                                        cy={pt.y}
+                                        r="36"
+                                        fill="transparent"
+                                        className="cursor-pointer"
+                                        onMouseEnter={() => handleEnter(i)}
+                                        onMouseLeave={handleLeave}
+                                        onClick={() => handleClick(i)}
+                                    />
+                                    <circle
+                                        cx={pt.x}
+                                        cy={pt.y}
+                                        r="13"
+                                        fill="#0a0a0c"
+                                        stroke={p.accent}
+                                        strokeWidth="3"
+                                        filter="url(#skill-dot-glow-mob)"
+                                        className="pointer-events-none"
+                                    />
+                                    <circle cx={pt.x} cy={pt.y} r="5" fill={p.accent} className="pointer-events-none" />
+
+                                    <text
+                                        x={tx}
+                                        y={ty}
+                                        textAnchor={textAnchor}
+                                        fill="#fafafa"
+                                        stroke="#09090b"
+                                        strokeWidth={4.5}
+                                        strokeLinejoin="round"
+                                        paintOrder="stroke fill"
+                                        fontSize={18}
+                                        fontWeight="900"
+                                        letterSpacing="0.04em"
+                                        filter="url(#skill-label-shadow-mob)"
+                                        className="uppercase pointer-events-none select-none"
+                                        style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+                                    >
+                                        {t === "AI & Agentic Engineering" ? "AI & Agentic Eng." : t}
+                                    </text>
+
+                                    <rect
+                                        x={pt.isLeft ? pt.x : pt.x - 180}
+                                        y={pt.y - 20}
+                                        width="180"
+                                        height="40"
+                                        fill="transparent"
+                                        className="cursor-pointer"
+                                        onMouseEnter={() => handleEnter(i)}
+                                        onMouseLeave={handleLeave}
+                                        onClick={() => handleClick(i)}
+                                    />
+                                </g>
+                            );
+                        })}
+                    </svg>
+                </div>
+
             </div>
 
             {tipContent}
