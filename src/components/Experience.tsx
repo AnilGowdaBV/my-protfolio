@@ -87,40 +87,44 @@ export function Experience() {
                                             {job.summary}
                                         </p>
 
-                                        <div className="border-t border-white/5 pt-4 mb-4">
-                                            <p className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold mb-2">
-                                                Impact & responsibilities
-                                            </p>
-                                            <ul className="grid gap-3 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-1.5">
-                                                {job.highlights.map((line, hIdx) => (
-                                                    <li
-                                                        key={hIdx}
-                                                        className="flex gap-2.5 items-start text-xs sm:text-[13px] text-zinc-300 leading-relaxed"
-                                                    >
-                                                        <span className="mt-1 shrink-0 w-3.5 h-3.5 rounded-full bg-violet-500/15 border border-violet-500/25 flex items-center justify-center">
-                                                            <Icons.check className="w-2 h-2 text-violet-300" />
-                                                        </span>
-                                                        <span>{line}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-
-                                        <div className="border-t border-white/5 pt-4">
-                                            <p className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold mb-2">
-                                                Stack & tools
-                                            </p>
-                                            <div className="flex flex-wrap gap-1.5">
-                                                {job.tech.map((t, tIdx) => (
-                                                    <span
-                                                        key={tIdx}
-                                                        className="text-[11px] px-2 py-0.5 rounded-md bg-zinc-900/80 text-zinc-300 border border-violet-500/15 font-medium"
-                                                    >
-                                                        {t}
-                                                    </span>
-                                                ))}
+                                        {job.highlights && job.highlights.length > 0 && (
+                                            <div className="border-t border-white/5 pt-4 mb-4">
+                                                <p className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold mb-2">
+                                                    Impact & responsibilities
+                                                </p>
+                                                <ul className="grid gap-3 sm:grid-cols-2 sm:gap-x-4 sm:gap-y-1.5">
+                                                    {job.highlights.map((line, hIdx) => (
+                                                        <li
+                                                            key={hIdx}
+                                                            className="flex gap-2.5 items-start text-xs sm:text-[13px] text-zinc-300 leading-relaxed"
+                                                        >
+                                                            <span className="mt-1 shrink-0 w-3.5 h-3.5 rounded-full bg-violet-500/15 border border-violet-500/25 flex items-center justify-center">
+                                                                <Icons.check className="w-2 h-2 text-violet-300" />
+                                                            </span>
+                                                            <span>{line}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
                                             </div>
-                                        </div>
+                                        )}
+
+                                        {job.tech && job.tech.length > 0 && (
+                                            <div className="border-t border-white/5 pt-4">
+                                                <p className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold mb-2">
+                                                    Stack & tools
+                                                </p>
+                                                <div className="flex flex-wrap gap-1.5">
+                                                    {job.tech.map((t, tIdx) => (
+                                                        <span
+                                                            key={tIdx}
+                                                            className="text-[11px] px-2 py-0.5 rounded-md bg-zinc-900/80 text-zinc-300 border border-violet-500/15 font-medium"
+                                                        >
+                                                            {t}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </motion.div>

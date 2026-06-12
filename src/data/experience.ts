@@ -10,12 +10,23 @@ export interface ExperienceEntry {
     /** One-line positioning statement */
     summary: string;
     /** Outcome-focused bullets — what you shipped and how you worked */
-    highlights: string[];
+    highlights?: string[];
     /** Stack and tools for this role */
-    tech: string[];
+    tech?: string[];
 }
 
 export const experience: ExperienceEntry[] = [
+    {
+        role: "Software Development Engineering Intern",
+        company: "Tally Solutions Pvt Ltd",
+        location: "Bengaluru, India",
+        locationUrl:
+            "https://www.google.com/maps/search/Tally+Solutions+Pvt+Ltd+Bengaluru",
+        period: "Jun 2026 – Present",
+        tenureBadge: "3 months",
+        summary:
+            "Contributing to enterprise-grade software development, focusing on high-performance logic, database optimization, and modular code architecture.",
+    },
     {
         role: "Full Stack Developer — Student Intern",
         company: "Inventech Info Solutions Pvt Ltd",
