@@ -17,7 +17,7 @@ export const projects = [
         ],
         tech: ["React", "NestJS", "MySQL", "Keycloak", "Apache Kafka", "Razorpay"],
         link: "https://www.linkedin.com/in/anil-bv-2704a8351",
-        github: "https://www.google.com",
+        github: "https://github.com/AnilGowdaBV",
     },
     {
         id: "usb-monitoring",
@@ -32,7 +32,7 @@ export const projects = [
         ],
         tech: ["Python", "Security Automation", "System Monitoring"],
         link: "https://www.linkedin.com/posts/anil-bv-2704a8351_python-cybersecurity-examsecurity-activity-7363558807404265474-vrL-?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFfQ4XQB5Y5gx7VyKs8CLg7aAQ8EAWm8isQ",
-        github: "https://www.google.com",
+        github: "https://github.com/AnilGowdaBV",
     },
     {
         id: "mentor-connect",
@@ -47,7 +47,7 @@ export const projects = [
         ],
         tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
         link: "https://www.linkedin.com/posts/anil-bv-2704a8351_mentorconnect-webdevelopment-php-activity-7300140589075849217-vg0f?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFfQ4XQB5Y5gx7VyKs8CLg7aAQ8EAWm8isQ",
-        github: "https://www.google.com",
+        github: "https://github.com/AnilGowdaBV",
     },
     {
         id: "driver-drowsiness",
@@ -62,7 +62,7 @@ export const projects = [
         ],
         tech: ["Python", "OpenCV", "Computer Vision"],
         link: "https://www.linkedin.com/posts/anil-bv-2704a8351_python-opencv-ai-activity-7311377581470105600-XvAM?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFfQ4XQB5Y5gx7VyKs8CLg7aAQ8EAWm8isQ",
-        github: "https://www.google.com",
+        github: "https://github.com/AnilGowdaBV",
     },
     {
         id: "road-extraction",
@@ -77,7 +77,7 @@ export const projects = [
         ],
         tech: ["Image Processing", "GIS", "Python", "Computer Vision"],
         link: "https://www.linkedin.com/posts/anil-bv-2704a8351_roadextraction-smartmapping-landanalysis-activity-7329502751279808513-ZE3g?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFfQ4XQB5Y5gx7VyKs8CLg7aAQ8EAWm8isQ",
-        github: "https://www.google.com",
+        github: "https://github.com/AnilGowdaBV",
     },
     {
         id: "school-dashboard",
@@ -92,7 +92,7 @@ export const projects = [
         ],
         tech: ["React", "NestJS", "MySQL"],
         link: "https://www.linkedin.com/in/anil-bv-2704a8351",
-        github: "https://www.google.com",
+        github: "https://github.com/AnilGowdaBV",
     },
     {
         id: "achiversit-website",
@@ -107,7 +107,7 @@ export const projects = [
         ],
         tech: ["React", "Tailwind CSS"],
         link: "https://www.linkedin.com/in/anil-bv-2704a8351",
-        github: "https://www.google.com",
+        github: "https://github.com/AnilGowdaBV",
     },
     {
         id: "task-flow",
@@ -122,6 +122,6 @@ export const projects = [
         ],
         tech: ["React", "NestJS", "MySQL"],
         link: "https://www.linkedin.com/in/anil-bv-2704a8351",
-        github: "https://www.google.com",
+        github: "https://github.com/AnilGowdaBV",
     },
 ];

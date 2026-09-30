@@ -6,9 +6,9 @@ import avatar from "@/assets/profile.jpg";
 
 const titles = [
     "AI Systems Engineer",
-    "Full-Stack AI Developer",
-    "Agentic Workflows Architect",
-    "LLM Integration Specialist"
+    "Full-Stack Engineer",
+    "Agentic Systems Architect",
+    "LLM Orchestration Specialist"
 ];
 
 export function Hero() {
@@ -74,10 +74,10 @@ export function Hero() {
                                 
                                 <div className="space-y-1 pt-0.5 lg:max-w-[95%] xl:max-w-full">
                                     <p className="text-xs md:text-sm lg:text-base text-zinc-300 mx-auto lg:mx-0 leading-snug font-medium">
-                                        Building intelligent agentic systems, advanced LLM pipelines, and scalable full-stack applications leveraging cognitive workflows.
+                                        Building agentic systems, LLM orchestration pipelines, and full-stack applications that run as production software — not prototypes.
                                     </p>
                                     <p className="text-[10px] sm:text-xs md:text-sm text-zinc-500 mx-auto lg:mx-0 leading-snug hidden sm:block">
-                                        Specializing in autonomous AI agents, Retrieval-Augmented Generation (RAG), and production-grade software engineering.
+                                        Focused on autonomous AI agents, Retrieval-Augmented Generation (RAG), vector retrieval, and the APIs that put cognitive workflows into real products.
                                     </p>
                                 </div>
                             </div>
@@ -142,7 +142,7 @@ export function Hero() {
                                         <a href="https://www.linkedin.com/in/anil-bv-2704a8351" target="_blank" rel="noreferrer" className="p-1 rounded-md hover:bg-white/10 transition-colors">
                                             <Icons.linkedin className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                                         </a>
-                                        <a href="https://www.google.com" target="_blank" rel="noreferrer" className="p-1 rounded-md hover:bg-white/10 transition-colors">
+                                        <a href="https://github.com/AnilGowdaBV" target="_blank" rel="noreferrer" className="p-1 rounded-md hover:bg-white/10 transition-colors">
                                             <Icons.github className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                                         </a>
                                     </div>

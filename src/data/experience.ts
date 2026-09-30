@@ -17,12 +17,38 @@ export interface ExperienceEntry {
 
 export const experience: ExperienceEntry[] = [
     {
+        role: "Software Engineer",
+        company: "Thinkify Labs",
+        location: "Bengaluru, India",
+        locationUrl:
+            "https://www.google.com/maps/search/Thinkify+Labs+Bengaluru",
+        period: "Sep 2026 – Present",
+        tenureBadge: "Present",
+        summary:
+            "Building modern AI-powered applications and intelligent agent-based tools across the full stack — Python, React, SQL, and REST APIs — with a focus on practical, user-facing AI products.",
+        highlights: [
+            "Designing and shipping AI agents and agentic workflows that call tools, process information, automate tasks, and run multi-step pipelines.",
+            "Owning backend development, frontend integration, and application workflows for AI-driven features.",
+            "Driving debugging, iteration, and continuous improvement of agent behavior and product quality.",
+        ],
+        tech: [
+            "Python",
+            "React",
+            "SQL",
+            "REST APIs",
+            "AI Agents",
+            "Agentic Workflows",
+            "AI Automation",
+            "Git",
+        ],
+    },
+    {
         role: "Software Development Engineering Intern",
         company: "Tally Solutions Pvt Ltd",
         location: "Bengaluru, India",
         locationUrl:
             "https://www.google.com/maps/search/Tally+Solutions+Pvt+Ltd+Bengaluru",
-        period: "Jun 2026 – Present",
+        period: "Jun 2026 – Aug 2026",
         tenureBadge: "3 months",
         summary:
             "Contributing to enterprise-grade software development, focusing on high-performance logic, database optimization, and modular code architecture.",
