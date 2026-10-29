@@ -49,7 +49,16 @@ export function Experience() {
                                     <div className="relative z-10">
                                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
                                             <div className="min-w-0 flex gap-2.5">
-                                                <Icons.briefcase className="w-4 h-4 text-violet-400 shrink-0 mt-0.5" />
+                                                {job.companyMark ? (
+                                                    <span
+                                                        aria-label={`${job.company} identifier`}
+                                                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-violet-400/30 bg-violet-500/15 text-[10px] font-bold tracking-wide text-violet-200"
+                                                    >
+                                                        {job.companyMark}
+                                                    </span>
+                                                ) : (
+                                                    <Icons.briefcase className="w-4 h-4 text-violet-400 shrink-0 mt-0.5" />
+                                                )}
                                                 <div className="space-y-0.5 min-w-0">
                                                     <h3 className="text-[15px] sm:text-lg font-bold text-white leading-snug group-hover:text-violet-100 transition-colors">
                                                         {job.role}
@@ -67,6 +76,20 @@ export function Experience() {
                                                             <Icons.mapPin className="w-3 h-3 shrink-0" />
                                                             {job.location}
                                                         </a>
+                                                    )}
+                                                    {(job.employmentType || job.workMode) && (
+                                                        <div className="flex flex-wrap gap-1.5 pt-2">
+                                                            {job.employmentType && (
+                                                                <span className="rounded-md border border-white/10 bg-white/[0.04] px-2 py-1 text-[10px] font-medium text-zinc-300">
+                                                                    {job.employmentType}
+                                                                </span>
+                                                            )}
+                                                            {job.workMode && (
+                                                                <span className="rounded-md border border-white/10 bg-white/[0.04] px-2 py-1 text-[10px] font-medium text-zinc-300">
+                                                                    {job.workMode}
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                     )}
                                                 </div>
                                             </div>
@@ -111,7 +134,7 @@ export function Experience() {
                                         {job.tech && job.tech.length > 0 && (
                                             <div className="border-t border-white/5 pt-4">
                                                 <p className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold mb-2">
-                                                    Stack & tools
+                                                    {job.techLabel ?? "Stack & tools"}
                                                 </p>
                                                 <div className="flex flex-wrap gap-1.5">
                                                     {job.tech.map((t, tIdx) => (

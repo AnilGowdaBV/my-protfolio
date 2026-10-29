@@ -34,10 +34,10 @@ export function Navbar() {
 
     const navLinks = [
         { name: "About", href: "#about" },
-        { name: "Skills", href: "#skills" },
-        { name: "Projects", href: "#projects" },
-        { name: "Honors", href: "#certifications" },
         { name: "Experience", href: "#experience" },
+        { name: "Projects", href: "#projects" },
+        { name: "Skills", href: "#skills" },
+        { name: "Honors", href: "#certifications" },
         { name: "Contact", href: "#contact" },
     ];
 

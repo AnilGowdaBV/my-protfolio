@@ -79,8 +79,15 @@ const ProjectCard = ({ project, index }: { project: typeof staticProjects[0]; in
                                 </a>
                             )}
                             {project.link && (
-                                <a href={project.link} target="_blank" rel="noreferrer" className="text-zinc-500 hover:text-white transition-colors">
-                                    <Icons.linkedin className="w-5 h-5" />
+                                <a
+                                    href={project.link}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    aria-label={`Open ${project.title} project link`}
+                                    title="Open project link"
+                                    className="text-zinc-500 hover:text-white transition-colors"
+                                >
+                                    <Icons.externalLink className="w-5 h-5" />
                                 </a>
                             )}
                         </div>
@@ -145,10 +152,10 @@ export function Projects() {
                     className="text-center mb-16"
                 >
                     <h2 className="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-indigo-600">
-                        Featured <span className="text-white">Ware</span>
+                        Selected <span className="text-white">Engineering Work</span>
                     </h2>
                     <p className="text-zinc-400 max-w-lg mx-auto">
-                        A selection of projects that push the boundaries of what's possible with modern web technologies.
+                        AI agents, intelligent automation, and full-stack applications built to solve practical problems.
                     </p>
                 </motion.div >
 

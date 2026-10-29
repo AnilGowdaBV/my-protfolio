@@ -2,6 +2,56 @@
 export const projects = [
 
     {
+        id: "candidate-screening-agent",
+        title: "Candidate Screening Agent",
+        description:
+            "An AI-assisted screening workflow that processes candidate profiles, verifies public GitHub evidence, and automates recruiter-facing status updates.",
+        details:
+            "Candidate Screening Agent is a local-first screening tool designed to make technical profile review more evidence-driven. It processes candidates from a configured search, discovers public GitHub profiles, verifies evidence of Go/Golang code through the official GitHub REST API, and records exact status notes when authorized.",
+        features: [
+            "Automated profile processing for configured candidate searches.",
+            "Public GitHub discovery and evidence-based language verification.",
+            "Local execution with explicit authorization for profile updates.",
+            "Separate backend and frontend workflows with setup and test scripts.",
+        ],
+        tech: ["Python", "FastAPI", "React", "GitHub API", "Automation"],
+        github: "https://github.com/AnilGowdaBV/Candidate-Screening-agent",
+    },
+    {
+        id: "job-data-extractor",
+        title: "Bulk Job Data Extractor",
+        description:
+            "A production-oriented web application that discovers job records from user-provided websites and exports clean, formatted Excel workbooks.",
+        details:
+            "Bulk Job Data Extractor combines a React and TypeScript frontend with a FastAPI backend to automate job-data collection. It uses Playwright for browser automation, Pandas for data processing, and OpenPyXL for structured Excel exports without requiring users to write selectors manually.",
+        features: [
+            "Autonomous discovery of job listings from supplied website URLs.",
+            "Browser automation for dynamic pages using Playwright and Chromium.",
+            "Clean data processing and formatted Excel export.",
+            "Responsive React interface backed by a FastAPI service.",
+        ],
+        tech: ["FastAPI", "Playwright", "React", "TypeScript", "Pandas", "OpenPyXL"],
+        link: "https://job-data-extractor.vercel.app",
+        github: "https://github.com/AnilGowdaBV/data_extraction",
+    },
+    {
+        id: "scrapeplus",
+        title: "ScrapePlus",
+        description:
+            "A browser automation and data extraction tool for collecting structured people and job-search results across multiple pages.",
+        details:
+            "ScrapePlus is a full-stack automation project with a browser userscript, backend services, database support, tests, and deployment configuration. It extracts structured fields from supported search results and provides a workflow for organizing the collected data.",
+        features: [
+            "Structured extraction of people and job-search result fields.",
+            "Multi-page browser automation through a Tampermonkey userscript.",
+            "Backend, database, test, and deployment configuration in one project.",
+            "Export-oriented workflow for reusable collected data.",
+        ],
+        tech: ["JavaScript", "Browser Automation", "REST APIs", "Database", "Testing"],
+        link: "https://scrape-plus.vercel.app",
+        github: "https://github.com/AnilGowdaBV/ScrapePlus",
+    },
+    {
         id: "trusthire",
         title: "TrustHire",
         description:
@@ -17,7 +67,6 @@ export const projects = [
         ],
         tech: ["React", "NestJS", "MySQL", "Keycloak", "Apache Kafka", "Razorpay"],
         link: "https://www.linkedin.com/in/anil-bv-2704a8351",
-        github: "https://github.com/AnilGowdaBV",
     },
     {
         id: "usb-monitoring",
@@ -32,7 +81,6 @@ export const projects = [
         ],
         tech: ["Python", "Security Automation", "System Monitoring"],
         link: "https://www.linkedin.com/posts/anil-bv-2704a8351_python-cybersecurity-examsecurity-activity-7363558807404265474-vrL-?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFfQ4XQB5Y5gx7VyKs8CLg7aAQ8EAWm8isQ",
-        github: "https://github.com/AnilGowdaBV",
     },
     {
         id: "mentor-connect",
@@ -47,7 +95,7 @@ export const projects = [
         ],
         tech: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
         link: "https://www.linkedin.com/posts/anil-bv-2704a8351_mentorconnect-webdevelopment-php-activity-7300140589075849217-vg0f?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFfQ4XQB5Y5gx7VyKs8CLg7aAQ8EAWm8isQ",
-        github: "https://github.com/AnilGowdaBV",
+        github: "https://github.com/AnilGowdaBV/Mentor-connect",
     },
     {
         id: "driver-drowsiness",
@@ -62,7 +110,6 @@ export const projects = [
         ],
         tech: ["Python", "OpenCV", "Computer Vision"],
         link: "https://www.linkedin.com/posts/anil-bv-2704a8351_python-opencv-ai-activity-7311377581470105600-XvAM?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFfQ4XQB5Y5gx7VyKs8CLg7aAQ8EAWm8isQ",
-        github: "https://github.com/AnilGowdaBV",
     },
     {
         id: "road-extraction",
@@ -77,7 +124,7 @@ export const projects = [
         ],
         tech: ["Image Processing", "GIS", "Python", "Computer Vision"],
         link: "https://www.linkedin.com/posts/anil-bv-2704a8351_roadextraction-smartmapping-landanalysis-activity-7329502751279808513-ZE3g?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFfQ4XQB5Y5gx7VyKs8CLg7aAQ8EAWm8isQ",
-        github: "https://github.com/AnilGowdaBV",
+        github: "https://github.com/AnilGowdaBV/road-extraction",
     },
     {
         id: "school-dashboard",
@@ -92,7 +139,6 @@ export const projects = [
         ],
         tech: ["React", "NestJS", "MySQL"],
         link: "https://www.linkedin.com/in/anil-bv-2704a8351",
-        github: "https://github.com/AnilGowdaBV",
     },
     {
         id: "achiversit-website",
@@ -107,7 +153,6 @@ export const projects = [
         ],
         tech: ["React", "Tailwind CSS"],
         link: "https://www.linkedin.com/in/anil-bv-2704a8351",
-        github: "https://github.com/AnilGowdaBV",
     },
     {
         id: "task-flow",
@@ -122,6 +167,5 @@ export const projects = [
         ],
         tech: ["React", "NestJS", "MySQL"],
         link: "https://www.linkedin.com/in/anil-bv-2704a8351",
-        github: "https://github.com/AnilGowdaBV",
     },
 ];

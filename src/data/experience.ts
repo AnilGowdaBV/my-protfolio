@@ -1,6 +1,9 @@
 export interface ExperienceEntry {
     role: string;
     company: string;
+    companyMark?: string;
+    employmentType?: string;
+    workMode?: string;
     location: string;
     locationUrl?: string;
     /** Shown in the date badge (e.g. full range) */
@@ -13,34 +16,38 @@ export interface ExperienceEntry {
     highlights?: string[];
     /** Stack and tools for this role */
     tech?: string[];
+    /** Label for the optional list of technologies or focus areas */
+    techLabel?: string;
 }
 
 export const experience: ExperienceEntry[] = [
     {
         role: "Software Engineer",
         company: "Thinkify Labs",
-        location: "Bengaluru, India",
+        companyMark: "TL",
+        employmentType: "Full-time",
+        workMode: "Hybrid",
+        location: "Bengaluru, Karnataka, India",
         locationUrl:
             "https://www.google.com/maps/search/Thinkify+Labs+Bengaluru",
-        period: "Sep 2026 – Present",
+        period: "September 2026 – Present",
         tenureBadge: "Present",
         summary:
-            "Building modern AI-powered applications and intelligent agent-based tools across the full stack — Python, React, SQL, and REST APIs — with a focus on practical, user-facing AI products.",
+            "Working as a Software Engineer at Thinkify Labs, building AI agents and intelligent automation solutions to solve real-world problems. Developing practical AI-driven applications, exploring modern technologies, and contributing to the design and implementation of intelligent systems.",
         highlights: [
-            "Designing and shipping AI agents and agentic workflows that call tools, process information, automate tasks, and run multi-step pipelines.",
-            "Owning backend development, frontend integration, and application workflows for AI-driven features.",
-            "Driving debugging, iteration, and continuous improvement of agent behavior and product quality.",
+            "AI agent development and intelligent automation for practical, real-world workflows.",
+            "Building AI-powered applications with full-stack engineering practices.",
+            "Problem solving through thoughtful software engineering and iterative implementation.",
         ],
         tech: [
-            "Python",
-            "React",
-            "SQL",
-            "REST APIs",
-            "AI Agents",
-            "Agentic Workflows",
-            "AI Automation",
-            "Git",
+            "AI Agent Development",
+            "Intelligent Automation",
+            "AI-Powered Applications",
+            "Full-Stack Development",
+            "Problem Solving",
+            "Software Engineering",
         ],
+        techLabel: "Focus areas",
     },
     {
         role: "Software Development Engineering Intern",
