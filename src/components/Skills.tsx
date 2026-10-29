@@ -109,8 +109,19 @@ export function Skills() {
             const curW = isMobile ? W_mob : W;
             const curH = isMobile ? H_mob : H;
 
-            const cx = r.left + (pt.x / curW) * r.width;
-            const cy = r.top + (pt.y / curH) * r.height;
+            // The SVG uses `xMidYMid meet`, so on desktop its drawing area is
+            // narrower than the full-width container. Match that letterboxed
+            // area instead of positioning the tooltip against the viewport.
+            const contentRatio = curW / curH;
+            const containerRatio = r.width / r.height;
+            const contentWidth =
+                containerRatio > contentRatio ? r.height * contentRatio : r.width;
+            const contentHeight =
+                containerRatio > contentRatio ? r.height : r.width / contentRatio;
+            const contentLeft = r.left + (r.width - contentWidth) / 2;
+            const contentTop = r.top + (r.height - contentHeight) / 2;
+            const cx = contentLeft + (pt.x / curW) * contentWidth;
+            const cy = contentTop + (pt.y / curH) * contentHeight;
             // Popup is centered with translate(-50%, …) — clamp the *center* X, not the left edge
             const panelW = Math.min(300, window.innerWidth - 24);
             const halfW = panelW / 2;
